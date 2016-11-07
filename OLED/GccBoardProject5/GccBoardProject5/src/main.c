@@ -32,10 +32,14 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
-#define SPI_SCLK_LOW_TIME 50
-#define SPI_SCLK_HIGH_TIME 50
+#define SPI_SCLK_LOW_TIME 0.01
+#define SPI_SCLK_HIGH_TIME 0.01
 #define HIGH_VALUE true
 #define LOW_VALUE false
+
+// Timing Delays
+#define SSD1331_DELAYS_HWFILL		(100)
+#define SSD1331_DELAYS_HWLINE       (1)
 
 // SSD1331 Commands
 #define SSD1331_CMD_DRAWLINE 		0x21
@@ -94,6 +98,7 @@ void write_SCLK(bool high)
 
 uint8_t SPI_transfer_byte(uint8_t byte_out)
 {
+	delay_ms(2);
     uint8_t byte_in = 0;
     uint8_t bit;
 
@@ -135,6 +140,12 @@ int main (void)
 	struct port_config pin_conf_CS;
 	port_get_config_defaults(&pin_conf_CS);	
 	
+	struct port_config pin_conf_RST;
+	port_get_config_defaults(&pin_conf_RST);	
+
+	struct port_config pin_conf_DC;
+	port_get_config_defaults(&pin_conf_DC);	
+	
 	
 	
 /*#define EXT1_PIN_15               PIN_PA05
@@ -150,20 +161,43 @@ int main (void)
 	
 	pin_conf_CS.direction  = PORT_PIN_DIR_OUTPUT;
 	port_pin_set_config(EXT1_PIN_17, &pin_conf_CS);
+	
+	pin_conf_RST.direction  = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(EXT1_PIN_18, &pin_conf_RST);	
 
+	pin_conf_DC.direction  = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(EXT1_PIN_14, &pin_conf_DC);
 
 	/* Insert application code here, after the board has been initialized. */
 	int j = 0;
+	uint16_t color = 0xCC;
+	uint16_t x = 0X02;
+	uint16_t y = 0X15;
+	uint16_t w = 0X03;
+	uint16_t h = 0X12;
 	/* This skeleton code simply sets the LED to the state of the button. */
 	while (1) {
 		/* Is button pressed? */
 		//sending data
-		delay_ms(10);
-		port_pin_set_output_level(EXT1_PIN_17, false);
-		delay_ms(100);
-		SPI_transfer_byte(175);
+		port_pin_set_output_level(EXT1_PIN_17, true);
+		delay_ms(200);
+		port_pin_set_output_level(EXT1_PIN_17, false); //cs low
+		//reset
+		delay_ms(200);
+		port_pin_set_output_level(EXT1_PIN_18, true); //reset high
+		delay_ms(200);
 
-		delay_ms(100);
+		port_pin_set_output_level(EXT1_PIN_18, false); //reset low
+		delay_ms(200);
+		port_pin_set_output_level(EXT1_PIN_18, true); //reset high
+		delay_ms(200);		
+		port_pin_set_output_level(EXT1_PIN_14, false); //DC LOW COMMAND MODE
+		delay_ms(200);	
+
+		SPI_transfer_byte(0X25);  	// 0xAE
+		SPI_transfer_byte(SSD1331_CMD_DISPLAYOFF);  	// 0xAE
+		SPI_transfer_byte(SSD1331_CMD_SETREMAP); 	// 0xA0	
+		SPI_transfer_byte(0x72); 	// rgb color
 		
 		SPI_transfer_byte(SSD1331_CMD_STARTLINE); 	// 0xA1
 		SPI_transfer_byte(0x0);
@@ -198,9 +232,44 @@ int main (void)
 		SPI_transfer_byte(0x50);
 		SPI_transfer_byte(SSD1331_CMD_CONTRASTC);  	// 0x83
 		SPI_transfer_byte(0x7D);
-		SPI_transfer_byte(SSD1331_CMD_DISPLAYON);	//--turn on oled panel  	
+		SPI_transfer_byte(SSD1331_CMD_DISPLAYON);	//--turn on oled panel  
 		
-		port_pin_set_output_level(EXT1_PIN_17, true);	
+		
+		
+		SPI_transfer_byte(SSD1331_CMD_SETCOLUMN);
+		SPI_transfer_byte(0X02);
+		SPI_transfer_byte(3-1);
+
+		SPI_transfer_byte(SSD1331_CMD_SETROW);
+		SPI_transfer_byte(0X05);
+		SPI_transfer_byte(2-1);
+		port_pin_set_output_level(EXT1_PIN_14, true); //DC HIGH DATA MODE
+		
+		SPI_transfer_byte(color >> 8);    
+		SPI_transfer_byte(color);
+		
+		
+		/*SPI_transfer_byte(SSD1331_CMD_FILL);
+		SPI_transfer_byte(0x01);
+		SPI_transfer_byte(SSD1331_CMD_DRAWRECT);
+		SPI_transfer_byte(0x03 & 0xFF);							// Starting column
+		SPI_transfer_byte(0x02 & 0xFF);							// Starting row
+		SPI_transfer_byte((0x03+w-1) & 0xFF);	// End column
+		SPI_transfer_byte((0x02+h-1) & 0xFF);	// End row
+  
+		// Outline color
+		SPI_transfer_byte((uint8_t)((color >> 11) << 1));
+		SPI_transfer_byte((uint8_t)((color >> 5) & 0x3F));
+		SPI_transfer_byte((uint8_t)((color << 1) & 0x3F));
+		// Fill color
+		SPI_transfer_byte((uint8_t)((color >> 11) << 1));
+		SPI_transfer_byte((uint8_t)((color >> 5) & 0x3F));
+		SPI_transfer_byte((uint8_t)((color << 1) & 0x3F));
+ 
+		// Delay while the fill completes
+		delay_ms(SSD1331_DELAYS_HWFILL); */
+		
+		delay_ms(100000);
 
 	}
 }
