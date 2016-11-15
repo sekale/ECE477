@@ -43,17 +43,15 @@ void configure_usart(void)
 	//! [setup_config_defaults]
 
 	//! [setup_change_config]
-	config_usart.baudrate    = 9600;
+	config_usart.baudrate    = 115200;
 	config_usart.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
-	config_usart.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
-	config_usart.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
-	config_usart.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
-	config_usart.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
+	config_usart.pinmux_pad2 = PINMUX_PB14C_SERCOM4_PAD2;//EDBG_CDC_SERCOM_PINMUX_PAD2;
+	config_usart.pinmux_pad3 = PINMUX_PB15C_SERCOM4_PAD3;//EDBG_CDC_SERCOM_PINMUX_PAD3;
 	//! [setup_change_config]
 
 	//! [setup_set_config]
 	while (usart_init(&usart_instance,
-	EDBG_CDC_MODULE, &config_usart) != STATUS_OK) {
+	SERCOM4/*EDBG_CDC_MODULE*/, &config_usart) != STATUS_OK) {
 	}
 	//! [setup_set_config]
 
@@ -90,8 +88,20 @@ void initializeUSART()
 	//! [enable_global_interrupts]
 
 	//! [main_send_string]
-	uint8_t string[] = "Sucks!\r\n";
-	usart_write_buffer_wait(&usart_instance, string, sizeof(string));	
+	//uint8_t string[] = "Sucks!\r\n";
+	//usart_write_buffer_wait(&usart_instance, string, sizeof(string));	
+	
+	uint8_t stringPlus[] = "+\r";
+	uint8_t stringReboot[] = "R,1\r";
+	uint8_t stringLs[] = "LS\r";
+
+
+	//usart_write_buffer_wait(&usart_instance, stringPlus, sizeof(stringPlus));
+	//delay_ms(100000);
+	//usart_write_buffer_wait(&usart_instance, stringReboot, sizeof(stringReboot));
+	//delay_ms(100000);
+	usart_write_buffer_wait(&usart_instance, stringLs, sizeof(stringLs));
+	
 }
 
 

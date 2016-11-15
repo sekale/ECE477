@@ -47,11 +47,11 @@ int main (void)
 	initializeOLED();
 	initializeUSART();
 	
-	/* This skeleton code simply sets the LED to the state of the button. */
 	while (1) 
 	{
-		usart_read_buffer_job(&usart_instance,
-			(uint8_t *)rx_buffer, MAX_RX_BUFFER_LENGTH);	
+		//Reading MAX_RX_BUFFER_LENGTH characters from SERCOM port
+		//usart_read_buffer_job(&usart_instance,
+			//(uint8_t *)rx_buffer, MAX_RX_BUFFER_LENGTH);	
 
 		//draw_line(YELLOW);
 		drawTimeMenu(9, 45, 53);
