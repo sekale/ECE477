@@ -2,6 +2,14 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
+src\ASF\sam0\drivers\sercom\sercom.c
+
+src\ASF\sam0\drivers\sercom\sercom_interrupt.c
+
+src\ASF\sam0\drivers\sercom\usart\usart.c
+
+src\ASF\sam0\drivers\sercom\usart\usart_interrupt.c
+
 src\ASF\common2\services\delay\sam0\systick_counter.c
 
 src\ASF\common\utils\interrupt\interrupt_sam_nvic.c

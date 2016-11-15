@@ -1,38 +1,11 @@
 /**
- * \file
- *
- * \brief Empty user application template
- *
+ * ECE477 Project Glass
+ * Team 10
  */
 
-/**
- * \mainpage User Application template doxygen documentation
- *
- * \par Empty user application template
- *
- * This is a bare minimum user application template.
- *
- * For documentation of the board, go \ref group_common_boards "here" for a link
- * to the board-specific documentation.
- *
- * \par Content
- *
- * -# Include the ASF header files (through asf.h)
- * -# Minimal main function that starts with a call to system_init()
- * -# Basic usage of on-board LED and button
- * -# "Insert application code here" comment
- *
- */
-
-/*
- * Include header files for all drivers that have been imported from
- * Atmel Software Framework (ASF).
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #include <asf.h>
 #include "OLED.h"
+#include "BLE.h"
 
 int main (void)
 {
@@ -72,40 +45,13 @@ int main (void)
 
 	/* Insert application code here, after the board has been initialized. */	
 	initializeOLED();
+	initializeUSART();
+	
 	/* This skeleton code simply sets the LED to the state of the button. */
 	while (1) 
 	{
-		/* Is button pressed? */
-		//sending data
-		
-		
-		/*SPI_transfer_byte(SSD1331_CMD_SETCOLUMN);
-		SPI_transfer_byte(0X02);
-		SPI_transfer_byte(3-1);
-
-		SPI_transfer_byte(SSD1331_CMD_SETROW);
-		SPI_transfer_byte(0X05);
-		SPI_transfer_byte(2-1);
-		port_pin_set_output_level(EXT1_PIN_14, true); //DC HIGH DATA MODE
-		
-		SPI_transfer_byte(color >> 8);    
-		SPI_transfer_byte(color);*/
-		
-    //SPI_transfer_byte(CMD_FILL_WINDOW);//fill window
-    //SPI_transfer_byte(ENABLE_FILL);
-    //SPI_transfer_byte(CMD_DRAW_RECTANGLE);//draw rectangle
-    //SPI_transfer_byte(x0);//start column
-    //SPI_transfer_byte(y0);//start row
-    //SPI_transfer_byte(x1);//end column
-    //SPI_transfer_byte(y1);//end row
-    //SPI_transfer_byte((uint8_t)((outColor>>11)&0x1F));//R
-    //SPI_transfer_byte((uint8_t)((outColor>>5)&0x3F));//G
-    //SPI_transfer_byte((uint8_t)(outColor&0x1F));//B
-    //SPI_transfer_byte((uint8_t)((fillColor>>11)&0x1F));//R
-    //SPI_transfer_byte((uint8_t)((fillColor>>5)&0x3F));//G
-    //SPI_transfer_byte((uint8_t)(fillColor&0x1F));//B		
-		
-		
+		usart_read_buffer_job(&usart_instance,
+			(uint8_t *)rx_buffer, MAX_RX_BUFFER_LENGTH);	
 
 		//draw_line(YELLOW);
 		drawTimeMenu(9, 45, 53);
