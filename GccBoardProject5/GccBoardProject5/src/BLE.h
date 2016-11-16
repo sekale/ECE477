@@ -22,8 +22,9 @@ volatile uint8_t rx_buffer[MAX_RX_BUFFER_LENGTH];
 //! [callback_funcs]
 void usart_read_callback(struct usart_module *const usart_module)
 {
-	usart_write_buffer_job(&usart_instance,
-	(uint8_t *)rx_buffer, MAX_RX_BUFFER_LENGTH);
+	
+	//usart_write_buffer_job(&usart_instance,
+	//(uint8_t *)rx_buffer, MAX_RX_BUFFER_LENGTH);
 }
 
 void usart_write_callback(struct usart_module *const usart_module)
@@ -44,15 +45,17 @@ void configure_usart(void)
 
 	//! [setup_change_config]
 	config_usart.baudrate    = 115200;
-	config_usart.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
+	config_usart.mux_setting = USART_RX_3_TX_2_XCK_3/*EDBG_CDC_SERCOM_MUX_SETTING*/;
 	config_usart.pinmux_pad2 = PINMUX_PB14C_SERCOM4_PAD2;//EDBG_CDC_SERCOM_PINMUX_PAD2;
 	config_usart.pinmux_pad3 = PINMUX_PB15C_SERCOM4_PAD3;//EDBG_CDC_SERCOM_PINMUX_PAD3;
 	//! [setup_change_config]
 
 	//! [setup_set_config]
 	while (usart_init(&usart_instance,
-	SERCOM4/*EDBG_CDC_MODULE*/, &config_usart) != STATUS_OK) {
+	SERCOM4/*EDBG_CDC_MODULE*/ , &config_usart) != STATUS_OK) {
 	}
+	
+	port_pin_set_output_level(EXT2_PIN_9/*PINMUX_PB15C_SERCOM4_PAD3*/, true);
 	//! [setup_set_config]
 
 	//! [setup_enable]
@@ -91,17 +94,52 @@ void initializeUSART()
 	//uint8_t string[] = "Sucks!\r\n";
 	//usart_write_buffer_wait(&usart_instance, string, sizeof(string));	
 	
-	uint8_t stringPlus[] = "+\r";
-	uint8_t stringReboot[] = "R,1\r";
-	uint8_t stringLs[] = "LS\r";
-
-
-	//usart_write_buffer_wait(&usart_instance, stringPlus, sizeof(stringPlus));
-	//delay_ms(100000);
-	//usart_write_buffer_wait(&usart_instance, stringReboot, sizeof(stringReboot));
-	//delay_ms(100000);
-	usart_write_buffer_wait(&usart_instance, stringLs, sizeof(stringLs));
+	uint8_t string_Plus[] = "+\r";
+	uint8_t string_Reboot[] = "R,1\r";
+	uint8_t string_LS[] = "LS\r";
+	uint8_t string_SF[] = "SF,1\r";
+	uint8_t string_SS[] = "SS,C0000000\r";
+	uint8_t string_SR[] = "SR,00000000\r";
+	uint8_t string_SS_1[] = "SS,C0000001\r";
+	uint8_t string_PZ[] = "PZ\r";
+	uint8_t string_PS[] = "PS,112233445566778899AABBCCDDEEFF\r";
+	uint8_t string_PC[] = "PC,0102030405060708090A0B0C0D0E0F,02,05\r";
+	uint8_t string_U[] = "U\r";
+	uint8_t string_SUW[] = "SUW,0102030405060708090A0B0C0D0E0F,1234\r";
+	uint8_t string_A[] = "A\r";
 	
+	//BLE Initializations
+	usart_write_buffer_wait(&usart_instance, string_Reboot, sizeof(string_Reboot) - 1);
+	delay_ms(100000);
+	usart_write_buffer_wait(&usart_instance, string_Plus, sizeof(string_Plus) - 1);
+	delay_ms(1000);
+	usart_write_buffer_wait(&usart_instance, string_SF, sizeof(string_SF) - 1);
+	delay_ms(1000);
+	usart_write_buffer_wait(&usart_instance, string_SS, sizeof(string_SS) - 1);
+	delay_ms(1000);
+	usart_write_buffer_wait(&usart_instance, string_SR, sizeof(string_SR) - 1);
+	delay_ms(1000);
+	usart_write_buffer_wait(&usart_instance, string_Reboot, sizeof(string_Reboot) - 1);
+	delay_ms(100000);
+	usart_write_buffer_wait(&usart_instance, string_SS_1, sizeof(string_SS_1) - 1);
+	delay_ms(1000);
+	usart_write_buffer_wait(&usart_instance, string_PZ, sizeof(string_PZ) - 1);
+	delay_ms(1000);
+	usart_write_buffer_wait(&usart_instance, string_PS, sizeof(string_PS) - 1);
+	delay_ms(1000);
+	usart_write_buffer_wait(&usart_instance, string_PC, sizeof(string_PC) - 1);
+	delay_ms(1000);
+	usart_write_buffer_wait(&usart_instance, string_U, sizeof(string_U) - 1);
+	delay_ms(1000);
+	usart_write_buffer_wait(&usart_instance, string_Reboot, sizeof(string_Reboot) - 1);
+	delay_ms(100000);
+	usart_write_buffer_wait(&usart_instance, string_A, sizeof(string_A) - 1);
+	delay_ms(1000);
+	usart_write_buffer_wait(&usart_instance, string_Plus, sizeof(string_Plus) - 1);
+	delay_ms(1000);
+	usart_write_buffer_wait(&usart_instance, string_SUW, sizeof(string_SUW) - 1);
+	
+	//usart_write_buffer_wait(&usart_instance, stringLs, sizeof(stringLs));	
 }
 
 
