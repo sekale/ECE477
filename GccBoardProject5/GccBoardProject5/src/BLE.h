@@ -102,8 +102,9 @@ void initializeUSART()
 	uint8_t string_SR[] = "SR,00000000\r";
 	uint8_t string_SS_1[] = "SS,C0000001\r";
 	uint8_t string_PZ[] = "PZ\r";
-	uint8_t string_PS[] = "PS,112233445566778899AABBCCDDEEFF\r";
-	uint8_t string_PC[] = "PC,0102030405060708090A0B0C0D0E0F,02,05\r";
+	uint8_t string_PS[] = "PS,11223344556677889900AABBCCDDEEFF\r";
+	uint8_t string_PC_0[] = "PC,010203040506070809000A0B0C0D0E0F,02,05\r";
+	uint8_t string_PC_1[] = "PC,111213141516171819101A1B1C1D1E1F,18,02\r";
 	uint8_t string_U[] = "U\r";
 	uint8_t string_SUW[] = "SUW,0102030405060708090A0B0C0D0E0F,1234\r";
 	uint8_t string_A[] = "A\r";
@@ -127,18 +128,22 @@ void initializeUSART()
 	delay_ms(1000);
 	usart_write_buffer_wait(&usart_instance, string_PS, sizeof(string_PS) - 1);
 	delay_ms(1000);
-	usart_write_buffer_wait(&usart_instance, string_PC, sizeof(string_PC) - 1);
+	usart_write_buffer_wait(&usart_instance, string_PC_0, sizeof(string_PC_0) - 1);
+	delay_ms(1000);
+	usart_write_buffer_wait(&usart_instance, string_PC_1, sizeof(string_PC_1) - 1);
 	delay_ms(1000);
 	usart_write_buffer_wait(&usart_instance, string_U, sizeof(string_U) - 1);
 	delay_ms(1000);
 	usart_write_buffer_wait(&usart_instance, string_Reboot, sizeof(string_Reboot) - 1);
 	delay_ms(100000);
+	//usart_write_buffer_wait(&usart_instance, string_LS, sizeof(string_LS));	
+	//delay_ms(1000);
 	usart_write_buffer_wait(&usart_instance, string_A, sizeof(string_A) - 1);
 	delay_ms(1000);
 	usart_write_buffer_wait(&usart_instance, string_Plus, sizeof(string_Plus) - 1);
 	delay_ms(1000);
 	usart_write_buffer_wait(&usart_instance, string_SUW, sizeof(string_SUW) - 1);
-	
+	delay_ms(1000);
 	//usart_write_buffer_wait(&usart_instance, stringLs, sizeof(stringLs));	
 }
 
