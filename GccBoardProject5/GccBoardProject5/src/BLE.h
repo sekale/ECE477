@@ -108,6 +108,22 @@ void initializeUSART()
 	uint8_t string_U[] = "U\r";
 	uint8_t string_SUW[] = "SUW,0102030405060708090A0B0C0D0E0F,1234\r";
 	uint8_t string_A[] = "A\r";
+
+	uint8_t string_PlusResponse[] = "Echo On\r\n";
+	uint8_t string_RebootResponse[] = "R,1\rReboot\r\nCMD\r\n";
+	//uint8_t string_RebootResponse[] = "Reboot\r\n";
+	//uint8_t string_LSResponse[] = "LS\r";
+	uint8_t string_SFResponse[] = "AOK\r\n";
+	uint8_t string_SSReponse[] = "AOK\r\n";
+	uint8_t string_SRResponse[] = "AOK\r\n";//
+	uint8_t string_SS_1Response[] = "AOK\r\n";
+	uint8_t string_PZResponse[] = "AOK\r\n";
+	uint8_t string_PSResponse[] = "AOK\r\n";
+	uint8_t string_PC_0Response[] = "AOK\r\n";
+	uint8_t string_PC_1Response[] = "AOK\r\n";
+	uint8_t string_UResponse[] = "ERR\r\n";
+	uint8_t string_SUWResponse[] = "SUW,0102030405060708090A0B0C0D0E0F,1234\rERR\r\n";
+	uint8_t string_AResponse[] = "AOK\r\n";
 	
 	//BLE Initializations
 	usart_write_buffer_wait(&usart_instance, string_Reboot, sizeof(string_Reboot) - 1);
