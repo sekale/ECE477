@@ -47,6 +47,39 @@
 #define SSD1331_CMD_PRECHARGELEVEL 	0xBB
 #define SSD1331_CMD_VCOMH 			0xBE
 
+void spi_init()
+{
+	//SPI Pin Definitions
+	struct port_config pin_conf_clk;
+	port_get_config_defaults(&pin_conf_clk);
+	
+	struct port_config pin_conf_mosi;
+	port_get_config_defaults(&pin_conf_mosi);
+	
+	struct port_config pin_conf_CS;
+	port_get_config_defaults(&pin_conf_CS);	
+	
+	struct port_config pin_conf_RST;
+	port_get_config_defaults(&pin_conf_RST);	
+
+	struct port_config pin_conf_DC;
+	port_get_config_defaults(&pin_conf_DC);	
+
+	pin_conf_clk.direction  = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(EXT1_PIN_15, &pin_conf_clk);
+	
+	pin_conf_mosi.direction  = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(EXT1_PIN_16, &pin_conf_mosi);
+	
+	pin_conf_CS.direction  = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(EXT1_PIN_17, &pin_conf_CS);
+	
+	pin_conf_RST.direction  = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(EXT1_PIN_18, &pin_conf_RST);	
+
+	pin_conf_DC.direction  = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(EXT1_PIN_14, &pin_conf_DC);	
+}
 void write_MOSI(bool high)
 {
 	if(high)

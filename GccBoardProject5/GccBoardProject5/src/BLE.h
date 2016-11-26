@@ -24,21 +24,20 @@ static int current_Rx_buffer_position = 0;
 static char check_end_of_string = 's';
 
 //string send and responses//
-
-	uint8_t string_Plus[] = "+\r";
-	uint8_t string_Reboot[] = "R,1\r";
-	uint8_t string_LS[] = "LS\r";
-	uint8_t string_SF[] = "SF,1\r";
-	uint8_t string_SS[] = "SS,C0000000\r";
-	uint8_t string_SR[] = "SR,00000000\r";
-	uint8_t string_SS_1[] = "SS,C0000001\r";
-	uint8_t string_PZ[] = "PZ\r";
-	uint8_t string_PS[] = "PS,11223344556677889900AABBCCDDEEFF\r";
-	uint8_t string_PC_0[] = "PC,010203040506070809000A0B0C0D0E0F,02,05\r";
-	uint8_t string_PC_1[] = "PC,111213141516171819101A1B1C1D1E1F,18,02\r";
-	uint8_t string_U[] = "U\r";
-	uint8_t string_SUW[] = "SUW,0102030405060708090A0B0C0D0E0F,1234\r";
-	uint8_t string_A[] = "A\r";
+	uint8_t string_Plus[] = "+\r\n";
+	uint8_t string_Reboot[] = "R,1\r\n";
+	uint8_t string_LS[] = "LS\r\n";
+	uint8_t string_SF[] = "SF,1\r\n";
+	uint8_t string_SS[] = "SS,C0000000\r\n";
+	uint8_t string_SR[] = "SR,00000000\r\n";
+	uint8_t string_SS_1[] = "SS,C0000001\r\n";
+	uint8_t string_PZ[] = "PZ\r\n";
+	uint8_t string_PS[] = "PS,11223344556677889900AABBCCDDEEFF\r\n";
+	uint8_t string_PC_0[] = "PC,010203040506070809000A0B0C0D0E0F,02,05\r\n";
+	uint8_t string_PC_1[] = "PC,111213141516171819101A1B1C1D1E1F,18,02\r\n";
+	uint8_t string_U[] = "U\r\n";
+	uint8_t string_SUW[] = "SUW,0102030405060708090A0B0C0D0E0F,1234\r\n";
+	uint8_t string_A[] = "A\r\n";
 	uint8_t string_SSReponse[] = "AOK\r\n";
 	uint8_t string_RebootResponse[] = "Reboot\r\nCMD\r\n";
 
@@ -90,6 +89,7 @@ void usart_read_callback(struct usart_module *const usart_module)
 	rx_buffer[current_Rx_buffer_position] = rx_buffer_read[0];
 	check_end_of_string = rx_buffer_read[0];
 	current_Rx_buffer_position++;
+	rx_buffer_read[0] = '\0';
 		
 	if(check_end_of_string == '\n')
 	{
@@ -183,32 +183,6 @@ void initializeUSART()
 	//! [enable_global_interrupts]
 
 	//! [main_send_string]
-	//uint8_t string[] = "Sucks!\r\n";
-	//usart_write_buffer_wait(&usart_instance, string, sizeof(string));	
-	
-
-	
-
-	
-	uint8_t string_PlusResponse[] = "Echo On\r\n";
-	
-	//uint8_t string_RebootResponse[] = "Reboot\r\n";
-	//uint8_t string_LSResponse[] = "LS\r";
-	//uint8_t string_SFResponse[] = "AOK\r\n";
-
-	//uint8_t string_SRResponse[] = "AOK\r\n";//
-	//uint8_t string_SS_1Response[] = "AOK\r\n";
-	//uint8_t string_PZResponse[] = "AOK\r\n";
-	//uint8_t string_PSResponse[] = "AOK\r\n";
-	//uint8_t string_PC_0Response[] = "AOK\r\n";
-	//uint8_t string_PC_1Response[] = "AOK\r\n";
-	uint8_t string_UResponse[] = "ERR\r\n";
-	uint8_t string_SUWResponse[] = "SUW,0102030405060708090A0B0C0D0E0F,1234\rERR\r\n";
-	//uint8_t string_AResponse[] = "AOK\r\n";
-	
-
-	//usart_write_buffer_job(&usart_instance,
-	//(uint8_t *)rx_buffer, MAX_RX_BUFFER_LENGTH);
 	string_inOp = string_Reboot;
 	usart_write_buffer_wait(&usart_instance, string_inOp, sizeof(string_Reboot) - 1);
 	read_char();
@@ -265,6 +239,7 @@ void initializeUSART()
 	string_inOp = string_Reboot;
 	usart_write_buffer_wait(&usart_instance, string_Reboot, sizeof(string_Reboot) - 1);
 	read_char();
+	read_char();
 	delay_ms(100000);
 	//usart_write_buffer_wait(&usart_instance, string_LS, sizeof(string_LS));	
 	//delay_ms(1000);
@@ -282,8 +257,4 @@ void initializeUSART()
 	delay_ms(1000);
 	//usart_write_buffer_wait(&usart_instance, stringLs, sizeof(stringLs));	
 }
-
-
-
-
 #endif /* USART_H_ */
