@@ -6,6 +6,7 @@
 #include <asf.h>
 #include "OLED.h"
 #include "BLE.h"
+#include "DataDisplayStruct.h"
 
 int main (void)
 {
@@ -14,6 +15,8 @@ int main (void)
 	spi_init();
 	/* Insert application code here, after the board has been initialized. */	
 	initializeOLED();
+	
+	Weather weatherData[3];
 	initializeUSART();
 	
 	while (1) 
@@ -28,7 +31,15 @@ int main (void)
 		drawCharacter('v', 22, 48, 40, 58);
 		drawCharacter('w', 22, 65, 40, 75);
 		
+		//WV,XXXX,W,SAT#COUDY#25#32!SAT#COUDY#25#32!SAT#COUDY#25#32!
 		delay_ms(100000);
+		
+		//while(usart_read_buffer_job(&usart_instance, rx_buffer_read, 1) != STATUS_OK);
+		
+		//W,		
+		//WV,001E,572C46726923436C65617223372336.
+		//WV,001E,21536174235261696E233223322153.
+		//WV,001E,756E235261696E2334233221.		
 		
 		//fill_color(BLUE);
 
