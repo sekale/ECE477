@@ -159,6 +159,10 @@ public class DeviceControlActivity extends Activity {
                             fetchWeatherTask.passBLEService(mBluetoothLeService);
                             fetchWeatherTask.execute("47906");
                             //fetchWeatherTask.execute("94043");
+
+                            FetchNewsTask fetchNewsTask = new FetchNewsTask();
+                            fetchNewsTask.passBLEService(mBluetoothLeService);
+                            fetchNewsTask.execute();
                         }
                         return true;
                     }
