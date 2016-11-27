@@ -17,6 +17,7 @@
 package com.example.android.bluetoothlegatt;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.BroadcastReceiver;
@@ -26,7 +27,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.IBinder;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -65,6 +68,13 @@ public class DeviceControlActivity extends Activity {
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
 
+
+    // ********************************************
+    private OneMinuteCountDownTimer countDownTimer;
+    private final long startTime = 60 * 1000;
+    private final long interval = 1 * 1000;
+    // ********************************************
+
     // Code to manage Service lifecycle.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -84,6 +94,57 @@ public class DeviceControlActivity extends Activity {
             mBluetoothLeService = null;
         }
     };
+
+    void sendTimeData()
+    {
+        Time thisTime = new Time();
+        thisTime.setToNow();
+        String timeSent = "T,";
+        int hour = thisTime.hour;
+        int min = thisTime.minute;
+
+        if(hour < 10) timeSent += "0";
+        timeSent += String.valueOf(hour);
+
+        if(min < 10) timeSent += "0";
+        timeSent += String.valueOf(min);
+
+        timeSent += "!";
+
+        Log.v("Time Sent: ", timeSent);
+        if(mBluetoothLeService != null)
+        {
+            while (mBluetoothLeService.isWriteOpsLockFree()) {
+            }
+            mBluetoothLeService.lockWriteOps();
+            mBluetoothLeService.writeStringCharacteristic(timeSent);
+            //noinspection StatementWithEmptyBody
+            while (mBluetoothLeService.isWriteOpsLockFree()) {
+            }
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    void sendWeatherandNewsData()
+    {
+        //mBluetoothLeService.writeCustomCharacteristic(65);
+        //mBluetoothLeService.writeStringCharacteristic("hello");
+
+        FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
+        fetchWeatherTask.passBLEService(mBluetoothLeService);
+        fetchWeatherTask.execute("47906");
+        //fetchWeatherTask.execute("94043");
+
+        FetchNewsTask fetchNewsTask = new FetchNewsTask();
+        fetchNewsTask.passBLEService(mBluetoothLeService);
+        fetchNewsTask.execute();
+    }
 
     // Handles various events fired by the Service.
     // ACTION_GATT_CONNECTED: connected to a GATT server.
@@ -152,17 +213,8 @@ public class DeviceControlActivity extends Activity {
                             //mNotifyCharacteristic = characteristic;
                             //mBluetoothLeService.setCharacteristicNotification(
                             //       characteristic, true);
-
-                            //mBluetoothLeService.writeCustomCharacteristic(65);
-                            //mBluetoothLeService.writeStringCharacteristic("hello");
-                            FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
-                            fetchWeatherTask.passBLEService(mBluetoothLeService);
-                            fetchWeatherTask.execute("47906");
-                            //fetchWeatherTask.execute("94043");
-
-                            FetchNewsTask fetchNewsTask = new FetchNewsTask();
-                            fetchNewsTask.passBLEService(mBluetoothLeService);
-                            fetchNewsTask.execute();
+                            sendWeatherandNewsData();
+                            sendTimeData();
                         }
                         return true;
                     }
@@ -195,6 +247,10 @@ public class DeviceControlActivity extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+
+        //************************************
+        countDownTimer = new OneMinuteCountDownTimer(startTime,interval);
+        countDownTimer.start();
     }
 
     @Override
@@ -332,4 +388,39 @@ public class DeviceControlActivity extends Activity {
         intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
         return intentFilter;
     }
+
+    class OneMinuteCountDownTimer extends CountDownTimer
+    {
+
+        public int MinutesPassed = 0;
+
+        public OneMinuteCountDownTimer (long startTime, long interval)
+        {
+            super(startTime, interval);
+        }
+
+        @Override
+        public void onFinish()
+        {
+
+            //Log.v("TimerFinished: ", "timer="+Time+" time finished");
+            MinutesPassed+=1;
+            DeviceControlActivity.this.sendTimeData();
+            if(MinutesPassed == 15)
+            {
+                // Update news and weather every 15 minutes
+                DeviceControlActivity.this.sendWeatherandNewsData();
+                MinutesPassed = 0;
+            }
+
+            this.start();
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished)
+        {
+            //Log.v("TimerValue: ","timer="+Time);
+        }
+    }
 }
+

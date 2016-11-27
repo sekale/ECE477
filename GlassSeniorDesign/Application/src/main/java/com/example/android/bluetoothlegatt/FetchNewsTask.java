@@ -30,10 +30,8 @@ import java.util.Map;
 public class FetchNewsTask extends AsyncTask<Void, Void, String[]>
 {
 
-    //public ArrayAdapter<String> mForecastAdapter;
     private BluetoothLeService mBluetoothLeService;
-    private HashMap<String,String> newsMap = new HashMap<String,String>();
-
+    private Pair<String,String> newsList[] = new Pair[3];
 
     void passBLEService(BluetoothLeService mBLEService)
     {
@@ -42,15 +40,15 @@ public class FetchNewsTask extends AsyncTask<Void, Void, String[]>
 
     private final String LOG_TAG = com.example.android.bluetoothlegatt.FetchNewsTask.class.getSimpleName();
 
-    void parseAndSendToMicro(String msg)
+    void parseAndSendToMicro(String msg, int newsNo)
     {
         int startIndx = 0;
         String s = "N,";
         while(msg.length() > 0)
         {
-            int subStrSize = 18;
+            int subStrSize = 16;
             if(msg.length() <= subStrSize) subStrSize = msg.length();
-            s += msg.substring( startIndx , startIndx + subStrSize );
+            s += String.valueOf(newsNo) + msg.substring( startIndx , startIndx + subStrSize ) + "!";
             msg = msg.substring(subStrSize, msg.length());
 
             Log.v(LOG_TAG, "Sending: " + s);// + "\nMsg length: " + msg.length());
@@ -61,6 +59,8 @@ public class FetchNewsTask extends AsyncTask<Void, Void, String[]>
 
     void sendToMicro(String msg)
     {
+        //noinspection StatementWithEmptyBody
+        while(mBluetoothLeService.isWriteOpsLockFree()){}
         mBluetoothLeService.lockWriteOps();
         mBluetoothLeService.writeStringCharacteristic(msg);
         //noinspection StatementWithEmptyBody
@@ -77,19 +77,15 @@ public class FetchNewsTask extends AsyncTask<Void, Void, String[]>
     protected String[] doInBackground(Void... params)
     {
         // Will contain the raw JSON response as a string.
-        String forecastJsonStr = null;
         Log.v(LOG_TAG, "Starting News Fetch");
 
         try
         {
-            // Construct the URL for the OpenWeatherMap query
-            // Possible parameters are avaiable at OWM's forecast API page, at
-            // http://openweathermap.org/API#forecast
-            final String FORECAST_BASE_URL =
-                    "http://feeds.reuters.com/reuters/topNews";
+            final String FORECAST_BASE_URL = "http://feeds.reuters.com/reuters/topNews";
 
             Document doc = null;
-            try {
+            try
+            {
                 doc = Jsoup.connect(FORECAST_BASE_URL).get();
             }
             catch (IOException e)
@@ -101,19 +97,21 @@ public class FetchNewsTask extends AsyncTask<Void, Void, String[]>
             //Log.v(LOG_TAG, newsHeadlines.toString());
 
             String[] finalStr = new String[newsHeadlines.size()];
-            for(int i = newsHeadlines.size() - 1; i >= 0; --i)
+
+            int loopStart = newsHeadlines.size() - 1;
+            if(loopStart > 2) loopStart = 2;
+            for(int i = loopStart; i >= 0; --i)
             {
                 String key = newsHeadlines.get(i).html();
                 String val = linkHeadlines.get(i).html();
                 finalStr[i] = key;
                 Log.v(LOG_TAG, key + ":" + val);
-                //NewsArticle article = new NewsArticle(key, val);
-                if(newsMap.containsKey(key) == false)
-                {
-                    newsMap.put(key, val);
-                    parseAndSendToMicro(key);
-                }
-                //Log.v(LOG_TAG, newsHeadlines.get(i).html() + "->" + linkHeadlines.get(i).html());
+                newsList[i] = Pair.create(key,val);
+            }
+
+            for(int i = 0; i < 3; ++i)
+            {
+                parseAndSendToMicro(newsList[i].first, i+1);
             }
             return finalStr;
         }

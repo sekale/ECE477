@@ -268,6 +268,9 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>
             {
                 //mForecastAdapter.add(dayForecastStr);
                 Log.v(LOG_TAG, dayForecastStr);
+
+                //noinspection StatementWithEmptyBody
+                while(mBluetoothLeService.isWriteOpsLockFree()){}
                 mBluetoothLeService.lockWriteOps();
                 mBluetoothLeService.writeStringCharacteristic(dayForecastStr);
                 //noinspection StatementWithEmptyBody
