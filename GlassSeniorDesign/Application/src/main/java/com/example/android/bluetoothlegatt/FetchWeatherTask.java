@@ -155,6 +155,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>
         return resultStrs;
 
     }
+
     @Override
     protected String[] doInBackground(String... params) {
 
@@ -267,9 +268,19 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>
             {
                 //mForecastAdapter.add(dayForecastStr);
                 Log.v(LOG_TAG, dayForecastStr);
+
+                //noinspection StatementWithEmptyBody
+                while(mBluetoothLeService.isWriteOpsLockFree()){}
                 mBluetoothLeService.lockWriteOps();
                 mBluetoothLeService.writeStringCharacteristic(dayForecastStr);
-                while(mBluetoothLeService.isWriteOpsLockFree() == true){}
+                //noinspection StatementWithEmptyBody
+                while(mBluetoothLeService.isWriteOpsLockFree()){}
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             // New data is back from the server.  Hooray!
 

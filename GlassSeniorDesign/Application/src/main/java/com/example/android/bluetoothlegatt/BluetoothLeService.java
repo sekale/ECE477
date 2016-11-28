@@ -358,7 +358,7 @@ public class BluetoothLeService extends Service {
         mWriteCharacteristic.setValue(value);
         if(mBluetoothGatt.writeCharacteristic(mWriteCharacteristic) == false)
         {
-            Log.w(TAG, "Failed to write characteristic");
+            Log.w(TAG, "Failed to write characteristic: " + value);
         }
     }
 

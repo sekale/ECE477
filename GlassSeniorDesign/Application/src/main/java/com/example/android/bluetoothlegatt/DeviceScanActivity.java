@@ -77,6 +77,9 @@ public class DeviceScanActivity extends ListActivity {
             finish();
             return;
         }
+
+//        FetchNewsTask fetchNewsTask = new FetchNewsTask();
+//        fetchNewsTask.execute();
     }
 
     @Override
