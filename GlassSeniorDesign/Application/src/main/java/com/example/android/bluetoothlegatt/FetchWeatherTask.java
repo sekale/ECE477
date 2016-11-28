@@ -28,6 +28,15 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>
     //public ArrayAdapter<String> mForecastAdapter;
     private BluetoothLeService mBluetoothLeService;
 
+    String[] cachedStrs = null;
+    void passCacheString(String[] weatherStringCache)
+    {
+        Log.v(LOG_TAG, "weatherStringCache: " + weatherStringCache[0] + " | " + weatherStringCache[1] + " | " + weatherStringCache[2]);
+        cachedStrs = weatherStringCache;
+        Log.v(LOG_TAG, "cacheStr: " + cachedStrs[0] + " | " + cachedStrs[1] + " | " + cachedStrs[2]);
+    }
+
+
     void passBLEService(BluetoothLeService mBLEService)
     {
         mBluetoothLeService = mBLEService;
@@ -102,7 +111,8 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>
 
         String[] resultStrs = new String[loopLimit];
 
-        for(int i = 0; i < loopLimit; i++) {
+        for(int i = 0; i < loopLimit; i++)
+        {
             // For now, using the format "Day, description, hi/low"
             String day;
             String description;
@@ -149,7 +159,8 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>
             resultStrs[i] = "W," + String.valueOf(i+1) + String.valueOf(dayNo) + "#" + String.valueOf(temperature) + "#" + String.valueOf(windSpeedInt) + "#" + description  + "!";
         }
 
-        for (String s : resultStrs) {
+        for (String s : resultStrs)
+        {
             Log.v(LOG_TAG, "Forecast entry: " + s);
         }
         return resultStrs;
@@ -157,7 +168,8 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>
     }
 
     @Override
-    protected String[] doInBackground(String... params) {
+    protected String[] doInBackground(String... params)
+    {
 
         // If there's no zip code, there's nothing to look up.  Verify size of params.
         if (params.length == 0) {
@@ -176,7 +188,8 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>
         String units = "metric";
         int numDays = 7;
 
-        try {
+        try
+        {
             // Construct the URL for the OpenWeatherMap query
             // Possible parameters are avaiable at OWM's forecast API page, at
             // http://openweathermap.org/API#forecast
@@ -208,33 +221,39 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>
             // Read the input stream into a String
             InputStream inputStream = urlConnection.getInputStream();
             StringBuffer buffer = new StringBuffer();
-            if (inputStream == null) {
+            if (inputStream == null)
+            {
                 // Nothing to do.
                 return null;
             }
             reader = new BufferedReader(new InputStreamReader(inputStream));
 
             String line;
-            while ((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null)
+            {
                 // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
                 // But it does make debugging a *lot* easier if you print out the completed
                 // buffer for debugging.
                 buffer.append(line + "\n");
             }
 
-            if (buffer.length() == 0) {
+            if (buffer.length() == 0)
+            {
                 // Stream was empty.  No point in parsing.
                 return null;
             }
             forecastJsonStr = buffer.toString();
 
             Log.v(LOG_TAG, "Forecast string: " + forecastJsonStr);
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             Log.e(LOG_TAG, "Error ", e);
             // If the code didn't successfully get the weather data, there's no point in attemping
             // to parse it.
             return null;
-        } finally {
+        } finally
+        {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
@@ -247,9 +266,12 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>
             }
         }
 
-        try {
+        try
+        {
             return getWeatherDataFromJson(forecastJsonStr, numDays);
-        } catch (JSONException e) {
+        }
+        catch (JSONException e)
+        {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
@@ -259,13 +281,36 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>
     }
 
     @Override
-    protected void onPostExecute(String[] result) {
+    protected void onPostExecute(String[] result)
+    {
+        for(int i = 0; i < 3; ++i)
+        {
+            if(result[i].equals(cachedStrs[i]))
+            {
+                result[i] = null;
+            }
+            else
+            {
+                cachedStrs[i] = new String(result[i]);
+            }
+        }
+        Log.v(LOG_TAG, "Cache updated: " + cachedStrs[0] + " | " + cachedStrs[1] + "," + cachedStrs[2]);
+        Log.v(LOG_TAG, "Result compared: " + result[0] + " | " + result[1] + "," + result[2]);
+
+
+
         if (result != null)
         {
-            //mForecastAdapter.clear();
-
             for(String dayForecastStr : result)
             {
+                if(dayForecastStr == null)
+                {
+                    continue;
+                }
+                if(mBluetoothLeService == null)
+                {
+                    break;
+                }
                 //mForecastAdapter.add(dayForecastStr);
                 Log.v(LOG_TAG, dayForecastStr);
 
@@ -282,25 +327,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>
                     e.printStackTrace();
                 }
             }
-            // New data is back from the server.  Hooray!
-
-            //mBluetoothLeService.writeCustomCharacteristic(65);
-            //mBluetoothLeService.writeStringCharacteristic("hello");
-            //for(int i = 0; i < finalStr.length(); ++i)
-            //{
-            //    mBluetoothLeService.writeCustomCharacteristic(finalStr.charAt(i));
-            //}
-            //*********************************************************************
-            //while(finalStr.length() > 0)
-            //{
-            //    int maxL = 15;
-            //    if(finalStr.length() < maxL) maxL = finalStr.length();
-            //    String s = finalStr.substring(0,maxL);
-            //    mBluetoothLeService.writeStringCharacteristic(s);
-            //    finalStr = finalStr.substring(maxL,finalStr.length());
-            //}
-            //*********************************************************************
-            //mBluetoothLeService.writeStringCharacteristic(finalStr);
         }
+        Log.v(LOG_TAG, "Finished Weather execution");
     }
 }

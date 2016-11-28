@@ -33,6 +33,14 @@ public class FetchNewsTask extends AsyncTask<Void, Void, String[]>
     private BluetoothLeService mBluetoothLeService;
     private Pair<String,String> newsList[] = new Pair[3];
 
+    String[] cachedStrs = null;
+    void passCacheString(String[] newsStringCache)
+    {
+        Log.v(LOG_TAG, "newsStringCache: " + newsStringCache[0] + " | " + newsStringCache[1] + " | " + newsStringCache[2]);
+        cachedStrs = newsStringCache;
+        Log.v(LOG_TAG, "cacheStr: " + cachedStrs[0] + " | " + cachedStrs[1] + " | " + cachedStrs[2]);
+    }
+
     void passBLEService(BluetoothLeService mBLEService)
     {
         mBluetoothLeService = mBLEService;
@@ -52,6 +60,7 @@ public class FetchNewsTask extends AsyncTask<Void, Void, String[]>
             msg = msg.substring(subStrSize, msg.length());
 
             Log.v(LOG_TAG, "Sending: " + s);// + "\nMsg length: " + msg.length());
+
             sendToMicro(s);
             s = "n,";   // reset s after sending to micro
         }
@@ -109,10 +118,20 @@ public class FetchNewsTask extends AsyncTask<Void, Void, String[]>
                 newsList[i] = Pair.create(key,val);
             }
 
+            Log.v(LOG_TAG, "CacheStrs before sending article: " +
+                    cachedStrs[0] + " | " + cachedStrs[1] + " | " + cachedStrs[2]);
+            Log.v(LOG_TAG, "newsList before sending article: \n* " +
+                    newsList[0].first + " \n* " + newsList[1].first + " \n* " + newsList[2].first);
             for(int i = 0; i < 3; ++i)
             {
-                parseAndSendToMicro(newsList[i].first, i+1);
+                if(cachedStrs[i] == null || !cachedStrs[i].equals(newsList[i].first))
+                {
+                    parseAndSendToMicro(newsList[i].first, i+1);
+                    cachedStrs[i] = new String(newsList[i].first);
+                }
             }
+            Log.v(LOG_TAG, "CacheStrs after sending article: \n* " +
+                    cachedStrs[0] + " \n* " + cachedStrs[1] + " \n* " + cachedStrs[2]);
             return finalStr;
         }
         catch (Exception e)

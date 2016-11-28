@@ -73,6 +73,9 @@ public class DeviceControlActivity extends Activity {
     private OneMinuteCountDownTimer countDownTimer;
     private final long startTime = 60 * 1000;
     private final long interval = 1 * 1000;
+
+    String[] weatherStringCache = new String[3];
+    String[] newsStringCache = new String[3];
     // ********************************************
 
     // Code to manage Service lifecycle.
@@ -111,22 +114,26 @@ public class DeviceControlActivity extends Activity {
 
         timeSent += "!";
 
-        Log.v("Time Sent: ", timeSent);
         if(mBluetoothLeService != null)
         {
-            while (mBluetoothLeService.isWriteOpsLockFree()) {
+            while(mBluetoothLeService.isWriteOpsLockFree()) {
             }
             mBluetoothLeService.lockWriteOps();
             mBluetoothLeService.writeStringCharacteristic(timeSent);
             //noinspection StatementWithEmptyBody
             while (mBluetoothLeService.isWriteOpsLockFree()) {
             }
+            Log.v("Time Sent: ", timeSent);
 
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+        else
+        {
+            Log.v("Time is: ", timeSent);
         }
 
     }
@@ -135,14 +142,15 @@ public class DeviceControlActivity extends Activity {
     {
         //mBluetoothLeService.writeCustomCharacteristic(65);
         //mBluetoothLeService.writeStringCharacteristic("hello");
-
         FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
         fetchWeatherTask.passBLEService(mBluetoothLeService);
+        fetchWeatherTask.passCacheString(weatherStringCache);
         fetchWeatherTask.execute("47906");
         //fetchWeatherTask.execute("94043");
 
         FetchNewsTask fetchNewsTask = new FetchNewsTask();
         fetchNewsTask.passBLEService(mBluetoothLeService);
+        fetchNewsTask.passCacheString(newsStringCache);
         fetchNewsTask.execute();
     }
 
@@ -213,8 +221,8 @@ public class DeviceControlActivity extends Activity {
                             //mNotifyCharacteristic = characteristic;
                             //mBluetoothLeService.setCharacteristicNotification(
                             //       characteristic, true);
-                            sendWeatherandNewsData();
-                            sendTimeData();
+                            //sendWeatherandNewsData();
+                            //sendTimeData();
                         }
                         return true;
                     }
@@ -261,9 +269,6 @@ public class DeviceControlActivity extends Activity {
             final boolean result = mBluetoothLeService.connect(mDeviceAddress);
             Log.d(TAG, "Connect request result=" + result);
         }
-//        FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
-//        fetchWeatherTask.passBLEService(mBluetoothLeService);
-//        fetchWeatherTask.execute("47906");
     }
 
     @Override
@@ -387,6 +392,12 @@ public class DeviceControlActivity extends Activity {
         intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
         intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
         return intentFilter;
+    }
+
+    public void refreshData(View view)
+    {
+        sendWeatherandNewsData();
+        sendTimeData();
     }
 
     class OneMinuteCountDownTimer extends CountDownTimer
