@@ -8,6 +8,8 @@
 #include "BLE.h"
 #include "DataDisplayStruct.h"
 
+Weather weather;
+
 int main (void)
 {
 	delay_init();
@@ -15,33 +17,55 @@ int main (void)
 	spi_init();
 	/* Insert application code here, after the board has been initialized. */	
 	initializeOLED();
-	
+	drawTimeMenu(12,0);
+	//read_char();
 	Weather weatherData[3];
 	initializeUSART();
-	
+	//draw_line(YELLOW);
+	//drawTimeMenu(9, 45, 53);
+	//drawCharacter('a', int sRow, int sCol, int eRow, int eCol);
+	//drawCharacter('z', 22,  5, 40, 15);
+	//drawCharacter('y', 22, 18, 40, 28);
+	//drawCharacter('x', 22, 35, 40, 45);
+	//drawCharacter('v', 22, 48, 40, 58);
+	//drawCharacter('w', 22, 65, 40, 75);
+	int counterResetAdvertise = 0;
 	while (1) 
 	{
+		++counterResetAdvertise;
+		//Re-advertise the device if it stops showing after a while
+		if(counterResetAdvertise == 30)
+		{
+			usart_write_buffer_wait(&usart_instance, string_A, sizeof(string_A) - 1);
+			read_char();
+			delay_ms(1000);
+			counterResetAdvertise = 0;
+		}
 		//start an async read of data
-		//draw_line(YELLOW);
-		drawTimeMenu(9, 45, 53);
-		//drawCharacter('a', int sRow, int sCol, int eRow, int eCol);
-		drawCharacter('z', 22,  5, 40, 15);
-		drawCharacter('y', 22, 18, 40, 28);
-		drawCharacter('x', 22, 35, 40, 45);
-		drawCharacter('v', 22, 48, 40, 58);
-		drawCharacter('w', 22, 65, 40, 75);
+		//Check if device is bound SUW will return an ERR\r\n if device is unbound
+		read_char(); //read whatever's coming in through the RN4020 BLE
+		if(timeChangeFlag)
+		{
+			//Call display function for time
+			fill_color(BLACK);
+			drawTimeMenu(timeObject.hour, timeObject.min);
+			timeChangeFlag = false;
+		}
 		
-		//WV,XXXX,W,SAT#COUDY#25#32!SAT#COUDY#25#32!SAT#COUDY#25#32!
-		delay_ms(100000);
+		if(weatherChangeFlag)
+		{
+			//call display for weather
+			weatherChangeFlag = false;
+		}
 		
-		//while(usart_read_buffer_job(&usart_instance, rx_buffer_read, 1) != STATUS_OK);
-		
-		//W,		
-		//WV,001E,572C46726923436C65617223372336.
-		//WV,001E,21536174235261696E233223322153.
-		//WV,001E,756E235261696E2334233221.		
+		if(newsChangeFlag)
+		{
+			//call display for news
+			newsChangeFlag = false;
+		}
+				
+		delay_ms(1000);
 		
 		//fill_color(BLUE);
-
 	}
 }

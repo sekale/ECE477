@@ -61,7 +61,7 @@ void spi_init()
 	
 	struct port_config pin_conf_RST;
 	port_get_config_defaults(&pin_conf_RST);	
-
+//SN,DEVICENAME
 	struct port_config pin_conf_DC;
 	port_get_config_defaults(&pin_conf_DC);	
 
@@ -119,7 +119,7 @@ uint8_t SPI_transfer_byte(uint8_t byte_out)
 		write_MOSI((byte_out & bit) ? HIGH : LOW);
 
 		/* Delay for at least the peer's setup time */
-		delay_ms(SPI_SCLK_LOW_TIME);
+		delay_us(SPI_SCLK_LOW_TIME); //changed to us from ms
 
 		/* Pull the clock line high */
 		write_SCLK(HIGH_VALUE);
@@ -129,7 +129,7 @@ uint8_t SPI_transfer_byte(uint8_t byte_out)
 		//byte_in |= bit;
 
 		/* Delay for at least the peer's hold time */
-		delay_ms(SPI_SCLK_HIGH_TIME);
+		delay_us(SPI_SCLK_HIGH_TIME); //changed to us from ms
 
 		/* Pull the clock line low */
 		write_SCLK(LOW_VALUE);
@@ -372,7 +372,7 @@ void drawDigit(int digit, int sRow, int sCol, int eRow, int eCol)
 		draw_line(sRow, sCol + width, sRow + height, sCol + width, RED);  // draw right line
 		break;
 		case 1:
-		draw_line(sRow, sCol + 2*width/3, sRow + height, eCol + 2*width/3, RED);
+		draw_line(sRow, sCol + 2*width/3, sRow + height, sCol + 2*width/3, RED);
 		break;
 		case 2:
 		draw_line(sRow, sCol, sRow, sCol + width, RED);                   // draw top line
@@ -427,16 +427,14 @@ void drawDigit(int digit, int sRow, int sCol, int eRow, int eCol)
 	}
 }
 
-void drawTimeMenu(int hour, int mins, int secs)
+void drawTimeMenu(int hour, int mins)
 {
 	// dimensions: 96 * 64
 	//drawDigit(int digit, int sRow, int sCol, int eRow, int eCol)
-	drawDigit(hour/10, 5, 5, 20, 15);
-	drawDigit(hour%10, 5, 18, 20, 28);
-	drawDigit(mins/10, 5, 35, 20, 45);
-	drawDigit(mins%10, 5, 48, 20, 58);
-	drawDigit(secs/10, 5, 65, 20, 75);
-	drawDigit(secs%10, 5, 78, 20, 88);
+	drawDigit(hour/10, 5, 5, 59, 24);
+	drawDigit(hour%10, 5, 27, 59, 46);
+	drawDigit(mins/10, 5, 49, 59, 68);
+	drawDigit(mins%10, 5, 71, 59, 90);
 }
 
 void initializeOLED()
