@@ -533,6 +533,39 @@ void drawWeatherInfo()
 	
 }
 
+void drawNewsArticle(int newsNo, uint16_t color)
+{
+	int sRow = newsNo*20 + 2;
+	int START_COL = 0;
+	int sCol = START_COL;
+	int verticalOffset = 0;
+	for(int i = 0; i < 48; ++i)
+	{
+		if(i % 16 == 0)
+		{
+			sCol = START_COL;
+			verticalOffset += 6;
+		}
+		drawCharacter(newsObject[newsNo], 
+				sRow + verticalOffset, 
+				sCol + 1 + i*6,
+				sRow + verticalOffset + 5,
+				sCol + 1 + i*6 + 5,
+				color);
+	}
+}
+
+void drawNewsInfo()
+{
+	// newsObject[3] struct defined
+	//	char headline[51]; //source
+	//	int currentIndex;
+	fill_color(WHITE);
+	drawNewsArticle(0, ORANGE);
+	drawNewsArticle(1, BLUE);
+	drawNewsArticle(2, GREEN);
+}
+
 void initializeOLED()
 {
 	//reset
