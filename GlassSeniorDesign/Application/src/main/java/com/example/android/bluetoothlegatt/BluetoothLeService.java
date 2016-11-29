@@ -121,6 +121,13 @@ public class BluetoothLeService extends Service {
             if (status == BluetoothGatt.GATT_SUCCESS)
             {
                 broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+
+                // delay for a bit until lock is released
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 writeOpsLock = false;
             }
         }

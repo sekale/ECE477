@@ -40,7 +40,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * For a given BLE device, this Activity provides the user interface to connect, display data,
@@ -76,6 +78,8 @@ public class DeviceControlActivity extends Activity {
 
     String[] weatherStringCache = new String[3];
     String[] newsStringCache = new String[3];
+
+    Queue<String> messageQueue = new LinkedList<String>();
     // ********************************************
 
     // Code to manage Service lifecycle.
@@ -121,15 +125,15 @@ public class DeviceControlActivity extends Activity {
             mBluetoothLeService.lockWriteOps();
             mBluetoothLeService.writeStringCharacteristic(timeSent);
             //noinspection StatementWithEmptyBody
-            while (mBluetoothLeService.isWriteOpsLockFree()) {
+            while (mBluetoothLeService.isWriteOpsLockFree())
+            {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             Log.v("Time Sent: ", timeSent);
-
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
         else
         {
@@ -145,11 +149,13 @@ public class DeviceControlActivity extends Activity {
         FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
         fetchWeatherTask.passBLEService(mBluetoothLeService);
         fetchWeatherTask.passCacheString(weatherStringCache);
+//        fetchWeatherTask.passMessageQueue(messageQueue);
         fetchWeatherTask.execute("47906");
         //fetchWeatherTask.execute("94043");
 
         FetchNewsTask fetchNewsTask = new FetchNewsTask();
         fetchNewsTask.passBLEService(mBluetoothLeService);
+//        fetchWeatherTask.passMessageQueue(messageQueue);
         fetchNewsTask.passCacheString(newsStringCache);
         fetchNewsTask.execute();
     }
@@ -160,9 +166,11 @@ public class DeviceControlActivity extends Activity {
     // ACTION_GATT_SERVICES_DISCOVERED: discovered GATT services.
     // ACTION_DATA_AVAILABLE: received data from the device.  This can be a result of read
     //                        or notification operations.
-    private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver()
+    {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context context, Intent intent)
+        {
             final String action = intent.getAction();
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
                 mConnected = true;
@@ -221,8 +229,6 @@ public class DeviceControlActivity extends Activity {
                             //mNotifyCharacteristic = characteristic;
                             //mBluetoothLeService.setCharacteristicNotification(
                             //       characteristic, true);
-                            //sendWeatherandNewsData();
-                            //sendTimeData();
                         }
                         return true;
                     }
@@ -397,17 +403,96 @@ public class DeviceControlActivity extends Activity {
     public void refreshData(View view)
     {
         sendWeatherandNewsData();
-        sendTimeData();
+    }
+
+    public void gestureLeft(View view)
+    {
+        if(mBluetoothLeService != null)
+        {
+            while(mBluetoothLeService.isWriteOpsLockFree()) {
+            }
+            mBluetoothLeService.lockWriteOps();
+            String s = "G,L!";
+            mBluetoothLeService.writeStringCharacteristic(s);
+            //noinspection StatementWithEmptyBody
+            while (mBluetoothLeService.isWriteOpsLockFree())
+            {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            Log.v("Gesture Sent:", s);
+        }
+        else
+        {
+            Log.v("Gesture Sent:", "Error: bluetooth not connected for gesture LEFT");
+        }
+    }
+
+    public void gestureRight(View view)
+    {
+        if(mBluetoothLeService != null)
+        {
+            while(mBluetoothLeService.isWriteOpsLockFree()) {
+            }
+            mBluetoothLeService.lockWriteOps();
+            String s = "G,R!";
+            mBluetoothLeService.writeStringCharacteristic(s);
+            //noinspection StatementWithEmptyBody
+            while (mBluetoothLeService.isWriteOpsLockFree())
+            {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            Log.v("Gesture Sent:", s);
+        }
+        else
+        {
+            Log.v("Gesture Sent:", "Error: bluetooth not connected for gesture RIGHT");
+        }
+    }
+
+    public void gestureToggle(View view)
+    {
+        if(mBluetoothLeService != null)
+        {
+            while(mBluetoothLeService.isWriteOpsLockFree()) {
+            }
+            mBluetoothLeService.lockWriteOps();
+            String s = "G,T!";
+            mBluetoothLeService.writeStringCharacteristic(s);
+            //noinspection StatementWithEmptyBody
+            while (mBluetoothLeService.isWriteOpsLockFree())
+            {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            Log.v("Gesture Sent:", s);
+        }
+        else
+        {
+            Log.v("Gesture Sent:", "Error: bluetooth not connected for gesture TOGGLE");
+        }
     }
 
     class OneMinuteCountDownTimer extends CountDownTimer
     {
 
-        public int MinutesPassed = 0;
+        public int MinutesPassed;
 
         public OneMinuteCountDownTimer (long startTime, long interval)
         {
             super(startTime, interval);
+            DeviceControlActivity.this.sendTimeData();
+            MinutesPassed = 14; // new data will be sent in 1 minute
         }
 
         @Override

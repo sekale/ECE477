@@ -59,8 +59,6 @@ public class FetchNewsTask extends AsyncTask<Void, Void, String[]>
             s += String.valueOf(newsNo) + msg.substring( startIndx , startIndx + subStrSize ) + "!";
             msg = msg.substring(subStrSize, msg.length());
 
-            Log.v(LOG_TAG, "Sending: " + s);// + "\nMsg length: " + msg.length());
-
             sendToMicro(s);
             s = "n,";   // reset s after sending to micro
         }
@@ -73,13 +71,15 @@ public class FetchNewsTask extends AsyncTask<Void, Void, String[]>
         mBluetoothLeService.lockWriteOps();
         mBluetoothLeService.writeStringCharacteristic(msg);
         //noinspection StatementWithEmptyBody
-        while(mBluetoothLeService.isWriteOpsLockFree()){}
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        while(mBluetoothLeService.isWriteOpsLockFree())
+        {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+        Log.v(LOG_TAG, "News Sent: " + msg);
     }
 
     @Override
