@@ -514,14 +514,15 @@ void drawWeatherInfo()
 		drawCharacter('E',0 + increment,36,6 + increment,40,RED);
 		drawCharacter('M',0 + increment,42,6 + increment,46,RED);
 		drawCharacter('P',0 + increment,48,6 + increment,52,RED);
-		//drawCharacter(':',0 + increment,54,6 + increment,58,RED);
+		
 		//int temperature = weatherObject[i].temperature;
+		//draw_line(0,0,63,95,GREEN);	// The perfect diagonal
 		if(-1 < 0)
 		{
-			draw_line(15,31,15,34,CYAN);
+			draw_line(15 + increment,31,15 + increment,34,CYAN);
 		}
 		drawDigit(1,10 + increment,36,15 + increment,39,CYAN);
-		drawDigit(2,41 + increment,31,15 + increment,44,CYAN);
+		drawDigit(2,10 + increment,41,15 + increment,44,CYAN);
 		
 		drawCharacter('W',0 + increment,70,6 + increment,74,RED);
 		drawCharacter('I',0 + increment,76,6 + increment,80,RED);
