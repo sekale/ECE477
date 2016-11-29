@@ -535,7 +535,7 @@ void drawWeatherInfo()
 
 void drawNewsArticle(int newsNo, uint16_t color)
 {
-	int sRow = newsNo*20 + 2;
+	int sRow = newsNo*20;
 	int START_COL = 0;
 	int sCol = START_COL;
 	int verticalOffset = 0;
@@ -547,10 +547,10 @@ void drawNewsArticle(int newsNo, uint16_t color)
 			verticalOffset += 6;
 		}
 		drawCharacter('a', 
-				sRow + verticalOffset, 
-				sCol + 1 + i*6,
-				sRow + verticalOffset + 5,
-				sCol + 1 + i*6 + 5,
+				sRow + verticalOffset + 1, 
+				sCol + 1 + (i%16)*6,
+				sRow + verticalOffset + 1 + 5,
+				sCol + 1 + 5 + (i%16)*6,
 				color);
 	}
 }
