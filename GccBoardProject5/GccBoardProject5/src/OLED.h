@@ -179,7 +179,7 @@ void draw_line(uint8_t sRow, uint8_t sCol, uint8_t eRow, uint8_t eCol, uint16_t 
 	delay_ms(SSD1331_DELAYS_HWLINE);
 }
 
-void drawCharacter(char character, int sRow, int sCol, int eRow, int eCol)
+void drawCharacter(char character, int sRow, int sCol, int eRow, int eCol, uint16_t color)
 {
 	int width = eCol - sCol;
 	int height = eRow - sRow;
@@ -188,177 +188,177 @@ void drawCharacter(char character, int sRow, int sCol, int eRow, int eCol)
 	{
 		case 'a':
 		case 'A':
-		draw_line(sRow, sCol, sRow, sCol + width, RED);               // draw top line
-		draw_line(sRow, sCol, sRow + height, sCol, RED);                // draw left line
-		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, RED); // draw middle line
-		draw_line(sRow, sCol + width, sRow + height, sCol + width, RED); // draw right line
+		draw_line(sRow, sCol, sRow, sCol + width, color);               // draw top line
+		draw_line(sRow, sCol, sRow + height, sCol, color);                // draw left line
+		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, color); // draw middle line
+		draw_line(sRow, sCol + width, sRow + height, sCol + width, color); // draw right line
 		break;
 		case 'b':
 		case 'B':
-		draw_line(sRow, sCol, sRow + height, sCol, RED);                // draw left line
-		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, RED); // draw middle line
-		draw_line(sRow + height/2, sCol + width, sRow + height, sCol + width, RED); // draw right line
-		draw_line(sRow + height, sCol, sRow + height, sCol + width, RED); // draw bottom line
+		draw_line(sRow, sCol, sRow + height, sCol, color);                // draw left line
+		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, color); // draw middle line
+		draw_line(sRow + height/2, sCol + width, sRow + height, sCol + width, color); // draw right line
+		draw_line(sRow + height, sCol, sRow + height, sCol + width, color); // draw bottom line
 		break;
 		case 'c':
 		case 'C':
-		draw_line(sRow + height/2, sCol, sRow + height, sCol, RED);                // draw left line
-		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, RED); // draw middle line
-		draw_line(sRow + height, sCol, sRow + height, sCol + width, RED); // draw bottom line
+		draw_line(sRow + height/2, sCol, sRow + height, sCol, color);                // draw left line
+		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, color); // draw middle line
+		draw_line(sRow + height, sCol, sRow + height, sCol + width, color); // draw bottom line
 		break;
 		case 'd':
 		case 'D':
-		draw_line(sRow + height/2, sCol, sRow + height, sCol, RED);                // draw left line
-		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, RED); // draw middle line
-		draw_line(sRow, sCol + width, sRow + height, sCol + width, RED); // draw right line
-		draw_line(sRow + height, sCol, sRow + height, sCol + width, RED); // draw bottom line
+		draw_line(sRow + height/2, sCol, sRow + height, sCol, color);                // draw left line
+		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, color); // draw middle line
+		draw_line(sRow, sCol + width, sRow + height, sCol + width, color); // draw right line
+		draw_line(sRow + height, sCol, sRow + height, sCol + width, color); // draw bottom line
 		break;
 		case 'e':
 		case 'E':
-		draw_line(sRow, sCol, sRow, sCol + width, RED);               // draw top line
-		draw_line(sRow, sCol, sRow + height, sCol, RED);                // draw left line
-		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, RED); // draw middle line
-		draw_line(sRow + height, sCol, sRow + height, sCol + width, RED); // draw bottom line
+		draw_line(sRow, sCol, sRow, sCol + width, color);               // draw top line
+		draw_line(sRow, sCol, sRow + height, sCol, color);                // draw left line
+		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, color); // draw middle line
+		draw_line(sRow + height, sCol, sRow + height, sCol + width, color); // draw bottom line
 		break;
 		case 'f':
 		case 'F':
-		draw_line(sRow, sCol, sRow, sCol + width, RED);               // draw top line
-		draw_line(sRow, sCol, sRow + height, sCol, RED);                // draw left line
-		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, RED); // draw middle line
+		draw_line(sRow, sCol, sRow, sCol + width, color);               // draw top line
+		draw_line(sRow, sCol, sRow + height, sCol, color);                // draw left line
+		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, color); // draw middle line
 		break;
 		case 'g':
 		case 'G':
-		draw_line(sRow, sCol, sRow, sCol + width, RED);               // draw top line
-		draw_line(sRow, sCol, sRow + height, sCol, RED);                // draw left line
-		draw_line(sRow + height/2, sCol + width/2, sRow + height/2, sCol + width, RED); // draw middle line
-		draw_line(sRow + height/2, sCol + width, sRow + height, sCol + width, RED); // draw right line
-		draw_line(sRow + height, sCol, sRow + height, sCol + width, RED); // draw bottom line
+		draw_line(sRow, sCol, sRow, sCol + width, color);               // draw top line
+		draw_line(sRow, sCol, sRow + height, sCol, color);                // draw left line
+		draw_line(sRow + height/2, sCol + width/2, sRow + height/2, sCol + width, color); // draw middle line
+		draw_line(sRow + height/2, sCol + width, sRow + height, sCol + width, color); // draw right line
+		draw_line(sRow + height, sCol, sRow + height, sCol + width, color); // draw bottom line
 		break;
 		case 'h':
 		case 'H':
-		draw_line(sRow, sCol, sRow + height, sCol, RED);                // draw left line
-		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, RED); // draw middle line
-		draw_line(sRow + height/2, sCol + width, sRow + height, sCol + width, RED); // draw right line
+		draw_line(sRow, sCol, sRow + height, sCol, color);                // draw left line
+		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, color); // draw middle line
+		draw_line(sRow + height/2, sCol + width, sRow + height, sCol + width, color); // draw right line
 		break;
 		case 'i':
 		case 'I':
-		draw_line(sRow, sCol, sRow, sCol + width, RED);               // draw top line
-		draw_line(sRow, sCol + width/2, sRow + height, sCol + width/2, RED);                // draw left line
-		draw_line(sRow + height, sCol, sRow + height, sCol + width, RED); // draw bottom line
+		draw_line(sRow, sCol, sRow, sCol + width, color);               // draw top line
+		draw_line(sRow, sCol + width/2, sRow + height, sCol + width/2, color);                // draw left line
+		draw_line(sRow + height, sCol, sRow + height, sCol + width, color); // draw bottom line
 		break;
 		case 'j':
 		case 'J':
-		draw_line(sRow, sCol, sRow, sCol + width, RED);               // draw top line
-		draw_line(sRow + 2*height/3, sCol + width/3, sRow + height, sCol + width/3, RED);                // draw left line
-		draw_line(sRow, sCol + 2*width/3, sRow + height, sCol + 2*width/3, RED); // draw right line
-		draw_line(sRow + height, sCol + width/3, sRow + height, sCol + 2*width/3, RED); // draw bottom line
+		draw_line(sRow, sCol, sRow, sCol + width, color);               // draw top line
+		draw_line(sRow + 2*height/3, sCol + width/3, sRow + height, sCol + width/3, color);                // draw left line
+		draw_line(sRow, sCol + 2*width/3, sRow + height, sCol + 2*width/3, color); // draw right line
+		draw_line(sRow + height, sCol + width/3, sRow + height, sCol + 2*width/3, color); // draw bottom line
 		break;
 		case 'k':
 		case 'K':
-		draw_line(sRow, sCol, sRow + height, sCol, RED);                // draw left line
-		draw_line(sRow + height/2, sCol, sRow, sCol + width, RED); // draw right line
-		draw_line(sRow + height/2, sCol, sRow + height, sCol + width, RED); // draw bottom line
+		draw_line(sRow, sCol, sRow + height, sCol, color);                // draw left line
+		draw_line(sRow + height/2, sCol, sRow, sCol + width, color); // draw right line
+		draw_line(sRow + height/2, sCol, sRow + height, sCol + width, color); // draw bottom line
 		break;
 		case 'l':
 		case 'L':
-		draw_line(sRow, sCol, sRow + height, sCol, RED);                // draw left line
-		draw_line(sRow + height, sCol, sRow + height, sCol + width, RED); // draw bottom line
+		draw_line(sRow, sCol, sRow + height, sCol, color);                // draw left line
+		draw_line(sRow + height, sCol, sRow + height, sCol + width, color); // draw bottom line
 		break;
 		case 'm':
 		case 'M':
-		draw_line(sRow, sCol, sRow + height, sCol, RED);                // draw left line
-		draw_line(sRow, sCol + width, sRow + height, sCol + width, RED); // draw right line
-		draw_line(sRow, sCol, sRow + height/2, sCol + width/2, RED);		// draw this(\) line
-		draw_line(sRow + height/2, sCol + width/2, sRow, sCol + width, RED); // draw this(/) line
+		draw_line(sRow, sCol, sRow + height, sCol, color);                // draw left line
+		draw_line(sRow, sCol + width, sRow + height, sCol + width, color); // draw right line
+		draw_line(sRow, sCol, sRow + height/2, sCol + width/2, color);		// draw this(\) line
+		draw_line(sRow + height/2, sCol + width/2, sRow, sCol + width, color); // draw this(/) line
 		break;
 		case 'n':
 		case 'N':
-		draw_line(sRow, sCol, sRow + height, sCol, RED);                // draw left line
-		draw_line(sRow, sCol + width, sRow + height, sCol + width, RED); // draw right line
-		draw_line(sRow, sCol, sRow + height, sCol + width/2, RED);		// draw this(\) line
+		draw_line(sRow, sCol, sRow + height, sCol, color);                // draw left line
+		draw_line(sRow, sCol + width, sRow + height, sCol + width, color); // draw right line
+		draw_line(sRow, sCol, sRow + height, sCol + width/2, color);		// draw this(\) line
 		break;
 		case 'o':
 		case 'O':
-		draw_line(sRow, sCol, sRow, sCol + width, RED);               // draw top line
-		draw_line(sRow, sCol, sRow + height, sCol, RED);                // draw left line
-		draw_line(sRow, sCol + width, sRow + height, sCol + width, RED); // draw right line
-		draw_line(sRow + height, sCol, sRow + height, sCol + width, RED); // draw bottom line
+		draw_line(sRow, sCol, sRow, sCol + width, color);               // draw top line
+		draw_line(sRow, sCol, sRow + height, sCol, color);                // draw left line
+		draw_line(sRow, sCol + width, sRow + height, sCol + width, color); // draw right line
+		draw_line(sRow + height, sCol, sRow + height, sCol + width, color); // draw bottom line
 		break;
 		case 'p':
 		case 'P':
-		draw_line(sRow, sCol, sRow, sCol + width, RED);               // draw top line
-		draw_line(sRow, sCol, sRow + height, sCol, RED);                // draw left line
-		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, RED); // draw middle line
-		draw_line(sRow, sCol + width, sRow + height/2, sCol + width, RED); // draw right line
+		draw_line(sRow, sCol, sRow, sCol + width, color);               // draw top line
+		draw_line(sRow, sCol, sRow + height, sCol, color);                // draw left line
+		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, color); // draw middle line
+		draw_line(sRow, sCol + width, sRow + height/2, sCol + width, color); // draw right line
 		break;
 		case 'q':
 		case 'Q':
-		draw_line(sRow, sCol, sRow, sCol + width, RED);               // draw top line
-		draw_line(sRow, sCol, sRow + height, sCol, RED);                // draw left line
-		draw_line(sRow + height/2, sCol + width/2, sRow + height, sCol + width, RED); // draw this(\) line
-		draw_line(sRow, sCol + width, sRow + height, sCol + width, RED); // draw right line
-		draw_line(sRow + height, sCol, sRow + height, sCol + width, RED); // draw bottom line
+		draw_line(sRow, sCol, sRow, sCol + width, color);               // draw top line
+		draw_line(sRow, sCol, sRow + height, sCol, color);                // draw left line
+		draw_line(sRow + height/2, sCol + width/2, sRow + height, sCol + width, color); // draw this(\) line
+		draw_line(sRow, sCol + width, sRow + height, sCol + width, color); // draw right line
+		draw_line(sRow + height, sCol, sRow + height, sCol + width, color); // draw bottom line
 		break;
 		case 'r':
 		case 'R':
-		draw_line(sRow, sCol, sRow, sCol + width, RED);               // draw top line
-		draw_line(sRow, sCol, sRow + height, sCol, RED);                // draw left line
-		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, RED); // draw middle line
-		draw_line(sRow, sCol + width, sRow + height/2, sCol + width, RED); // draw right line
-		draw_line(sRow + height/2, sCol + width/2, sRow + height, sCol + width, RED); // draw this(\) line
+		draw_line(sRow, sCol, sRow, sCol + width, color);               // draw top line
+		draw_line(sRow, sCol, sRow + height, sCol, color);                // draw left line
+		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, color); // draw middle line
+		draw_line(sRow, sCol + width, sRow + height/2, sCol + width, color); // draw right line
+		draw_line(sRow + height/2, sCol + width/2, sRow + height, sCol + width, color); // draw this(\) line
 		break;
 		case 's':
 		case 'S':
-		draw_line(sRow, sCol, sRow, sCol + width, RED);               // draw top line
-		draw_line(sRow, sCol, sRow + height/2, sCol, RED);                // draw left line
-		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, RED); // draw middle line
-		draw_line(sRow + height/2, sCol + width, sRow + height, sCol + width, RED); // draw right line
-		draw_line(sRow + height, sCol, sRow + height, sCol + width, RED); // draw bottom line
+		draw_line(sRow, sCol, sRow, sCol + width, color);               // draw top line
+		draw_line(sRow, sCol, sRow + height/2, sCol, color);                // draw left line
+		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, color); // draw middle line
+		draw_line(sRow + height/2, sCol + width, sRow + height, sCol + width, color); // draw right line
+		draw_line(sRow + height, sCol, sRow + height, sCol + width, color); // draw bottom line
 		break;
 		case 't':
 		case 'T':
-		draw_line(sRow, sCol, sRow, sCol + width, RED);               // draw top line
-		draw_line(sRow, sCol + width/2, sRow + height, sCol + width/2, RED);	// draw left line
+		draw_line(sRow, sCol, sRow, sCol + width, color);               // draw top line
+		draw_line(sRow, sCol + width/2, sRow + height, sCol + width/2, color);	// draw left line
 		break;
 		case 'u':
 		case 'U':
-		draw_line(sRow, sCol, sRow + height, sCol, RED);                // draw left line
-		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, RED); // draw middle line
-		draw_line(sRow, sCol + width, sRow + height, sCol + width, RED); // draw right line
-		draw_line(sRow + height, sCol, sRow + height, sCol + width, RED); // draw bottom line
+		draw_line(sRow, sCol, sRow + height, sCol, color);                // draw left line
+		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, color); // draw middle line
+		draw_line(sRow, sCol + width, sRow + height, sCol + width, color); // draw right line
+		draw_line(sRow + height, sCol, sRow + height, sCol + width, color); // draw bottom line
 		break;
 		case 'v':
 		case 'V':
-		draw_line(sRow, sCol, sRow + height, sCol + width/2, RED);		// draw this(\) line
-		draw_line(sRow + height, sCol + width/2, sRow, sCol + width, RED); // draw this(/) line
+		draw_line(sRow, sCol, sRow + height, sCol + width/2, color);		// draw this(\) line
+		draw_line(sRow + height, sCol + width/2, sRow, sCol + width, color); // draw this(/) line
 		break;
 		case 'w':
 		case 'W':
-		draw_line(sRow, sCol, sRow + height, sCol, RED);                // draw left line
-		draw_line(sRow, sCol + width, sRow + height, sCol + width, RED); // draw right line
-		draw_line(sRow + height/2, sCol + width/2, sRow + height, sCol + width, RED); // draw this(\) line
-		draw_line(sRow + height, sCol, sRow + height/2, sCol + width/2, RED); // draw this(/) line
+		draw_line(sRow, sCol, sRow + height, sCol, color);                // draw left line
+		draw_line(sRow, sCol + width, sRow + height, sCol + width, color); // draw right line
+		draw_line(sRow + height/2, sCol + width/2, sRow + height, sCol + width, color); // draw this(\) line
+		draw_line(sRow + height, sCol, sRow + height/2, sCol + width/2, color); // draw this(/) line
 		break;
 		case 'x':
 		case 'X':
-		draw_line(sRow, sCol, sRow + height, sCol + width, RED);		// draw this(\) line
-		draw_line(sRow + height, sCol, sRow, sCol + width, RED); // draw this(/) line
+		draw_line(sRow, sCol, sRow + height, sCol + width, color);		// draw this(\) line
+		draw_line(sRow + height, sCol, sRow, sCol + width, color); // draw this(/) line
 		break;
 		case 'y':
 		case 'Y':
-		draw_line(sRow, sCol, sRow + height/2, sCol + width/2, RED);		// draw this(\) line
-		draw_line(sRow + height, sCol, sRow, sCol + width, RED); // draw this(/) line
+		draw_line(sRow, sCol, sRow + height/2, sCol + width/2, color);		// draw this(\) line
+		draw_line(sRow + height, sCol, sRow, sCol + width, color); // draw this(/) line
 		break;
 		case 'z':
 		case 'Z':
-		draw_line(sRow, sCol, sRow, sCol + width, RED);               // draw top line
-		draw_line(sRow + height, sCol, sRow, sCol + width, RED); // draw this(/) line
-		draw_line(sRow + height, sCol, sRow + height, sCol + width, RED); // draw bottom line
+		draw_line(sRow, sCol, sRow, sCol + width, color);               // draw top line
+		draw_line(sRow + height, sCol, sRow, sCol + width, color); // draw this(/) line
+		draw_line(sRow + height, sCol, sRow + height, sCol + width, color); // draw bottom line
 		break;
 	}
 }
 
-void drawDigit(int digit, int sRow, int sCol, int eRow, int eCol)
+void drawDigit(int digit, int sRow, int sCol, int eRow, int eCol, uint16_t color)
 {
 	int width  = eCol - sCol;
 	int height = eRow - sRow;
@@ -366,63 +366,63 @@ void drawDigit(int digit, int sRow, int sCol, int eRow, int eCol)
 	switch(digit)
 	{
 		case 0:
-		draw_line(sRow, sCol, sRow + height, sCol, RED);                  // draw left line
-		draw_line(sRow, sCol, sRow, sCol + width, RED);                   // draw top line
-		draw_line(sRow + height, sCol, sRow + height, sCol + width, RED); // draw bottom line
-		draw_line(sRow, sCol + width, sRow + height, sCol + width, RED);  // draw right line
+		draw_line(sRow, sCol, sRow + height, sCol, color);                  // draw left line
+		draw_line(sRow, sCol, sRow, sCol + width, color);                   // draw top line
+		draw_line(sRow + height, sCol, sRow + height, sCol + width, color); // draw bottom line
+		draw_line(sRow, sCol + width, sRow + height, sCol + width, color);  // draw right line
 		break;
 		case 1:
-		draw_line(sRow, sCol + 2*width/3, sRow + height, sCol + 2*width/3, RED);
+		draw_line(sRow, sCol + 2*width/3, sRow + height, sCol + 2*width/3, color);
 		break;
 		case 2:
-		draw_line(sRow, sCol, sRow, sCol + width, RED);                   // draw top line
-		draw_line(sRow, sCol + width, sRow + height/2, sCol + width, RED);  // draw right line
-		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, RED); // draw middle line
-		draw_line(sRow + height/2, sCol, sRow + height, sCol, RED);         // draw left line
-		draw_line(sRow + height, sCol, sRow + height, sCol + width, RED); // draw bottom line
+		draw_line(sRow, sCol, sRow, sCol + width, color);                   // draw top line
+		draw_line(sRow, sCol + width, sRow + height/2, sCol + width, color);  // draw right line
+		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, color); // draw middle line
+		draw_line(sRow + height/2, sCol, sRow + height, sCol, color);         // draw left line
+		draw_line(sRow + height, sCol, sRow + height, sCol + width, color); // draw bottom line
 		break;
 		case 3:
-		draw_line(sRow, sCol, sRow, sCol + width, RED);                   // draw top line
-		draw_line(sRow, sCol + width, sRow + height, sCol + width, RED);  // draw right line
-		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, RED); // draw middle line
-		draw_line(sRow + height, sCol, sRow + height, sCol + width, RED); // draw bottom line
+		draw_line(sRow, sCol, sRow, sCol + width, color);                   // draw top line
+		draw_line(sRow, sCol + width, sRow + height, sCol + width, color);  // draw right line
+		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, color); // draw middle line
+		draw_line(sRow + height, sCol, sRow + height, sCol + width, color); // draw bottom line
 		break;
 		case 4:
-		draw_line(sRow, sCol, sRow + height/2, sCol, RED);         // draw left line
-		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, RED); // draw middle line
-		draw_line( sRow + height/3, sCol + 2*width/3, sRow + height, sCol + 2*width/3 , RED);
+		draw_line(sRow, sCol, sRow + height/2, sCol, color);         // draw left line
+		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, color); // draw middle line
+		draw_line( sRow + height/3, sCol + 2*width/3, sRow + height, sCol + 2*width/3 , color);
 		break;
 		case 5:
-		draw_line(sRow, sCol, sRow, sCol + width, RED);               // draw top line
-		draw_line(sRow, sCol, sRow + height/2, sCol, RED);                // draw left line
-		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, RED); // draw middle line
-		draw_line(sRow + height/2, sCol + width, sRow + height, sCol + width, RED); // draw right line
-		draw_line(sRow + height, sCol, sRow + height, sCol + width, RED); // draw bottom line
+		draw_line(sRow, sCol, sRow, sCol + width, color);               // draw top line
+		draw_line(sRow, sCol, sRow + height/2, sCol, color);                // draw left line
+		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, color); // draw middle line
+		draw_line(sRow + height/2, sCol + width, sRow + height, sCol + width, color); // draw right line
+		draw_line(sRow + height, sCol, sRow + height, sCol + width, color); // draw bottom line
 		break;
 		case 6:
-		draw_line(sRow, sCol, sRow, sCol + width, RED);               // draw top line
-		draw_line(sRow, sCol, sRow + height, sCol, RED);                // draw left line
-		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, RED); // draw middle line
-		draw_line(sRow + height/2, sCol + width, sRow + height, sCol + width, RED); // draw right line
-		draw_line(sRow + height, sCol, sRow + height, sCol + width, RED); // draw bottom line
+		draw_line(sRow, sCol, sRow, sCol + width, color);               // draw top line
+		draw_line(sRow, sCol, sRow + height, sCol, color);                // draw left line
+		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, color); // draw middle line
+		draw_line(sRow + height/2, sCol + width, sRow + height, sCol + width, color); // draw right line
+		draw_line(sRow + height, sCol, sRow + height, sCol + width, color); // draw bottom line
 		break;
 		case 7:
-		draw_line(sRow, sCol, sRow, sCol + width, RED);               // draw top line
-		draw_line(sRow, sCol + width, sRow + height, sCol + 2*width/3, RED); // draw right line
+		draw_line(sRow, sCol, sRow, sCol + width, color);               // draw top line
+		draw_line(sRow, sCol + width, sRow + height, sCol + 2*width/3, color); // draw right line
 		break;
 		case 8:
-		draw_line(sRow, sCol, sRow, sCol + width, RED);               // draw top line
-		draw_line(sRow, sCol, sRow + height, sCol, RED);                // draw left line
-		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, RED); // draw middle line
-		draw_line(sRow, sCol + width, sRow + height, sCol + width, RED); // draw right line
-		draw_line(sRow + height, sCol, sRow + height, sCol + width, RED); // draw bottom line
+		draw_line(sRow, sCol, sRow, sCol + width, color);               // draw top line
+		draw_line(sRow, sCol, sRow + height, sCol, color);                // draw left line
+		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, color); // draw middle line
+		draw_line(sRow, sCol + width, sRow + height, sCol + width, color); // draw right line
+		draw_line(sRow + height, sCol, sRow + height, sCol + width, color); // draw bottom line
 		break;
 		case 9:
-		draw_line(sRow, sCol, sRow, sCol + width, RED);               // draw top line
-		draw_line(sRow, sCol, sRow + height/2, sCol, RED);                // draw left line
-		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, RED); // draw middle line
-		draw_line(sRow, sCol + width, sRow + height, sCol + width, RED); // draw right line
-		draw_line(sRow + height, sCol, sRow + height, sCol + width, RED); // draw bottom line
+		draw_line(sRow, sCol, sRow, sCol + width, color);               // draw top line
+		draw_line(sRow, sCol, sRow + height/2, sCol, color);                // draw left line
+		draw_line(sRow + height/2, sCol, sRow + height/2, sCol + width, color); // draw middle line
+		draw_line(sRow, sCol + width, sRow + height, sCol + width, color); // draw right line
+		draw_line(sRow + height, sCol, sRow + height, sCol + width, color); // draw bottom line
 		break;
 	}
 }
@@ -431,10 +431,10 @@ void drawTimeMenu(int hour, int mins)
 {
 	// dimensions: 96 * 64
 	//drawDigit(int digit, int sRow, int sCol, int eRow, int eCol)
-	drawDigit(hour/10, 5, 5, 59, 24);
-	drawDigit(hour%10, 5, 27, 59, 46);
-	drawDigit(mins/10, 5, 49, 59, 68);
-	drawDigit(mins%10, 5, 71, 59, 90);
+	drawDigit(hour/10, 5, 5, 59, 24, RED);
+	drawDigit(hour%10, 5, 27, 59, 46, RED);
+	drawDigit(mins/10, 5, 49, 59, 68, RED);
+	drawDigit(mins%10, 5, 71, 59, 90, RED);
 }
 
 void getDay(char *day , int dayNum)
@@ -504,9 +504,29 @@ void drawWeatherInfo()
 	for(i = 0; i < 2 ; i++)
 	{
 		//getDay(day,weatherObject[i].typeDay);
-		drawCharacter(day[0],0 + increment,2 ,7 + increment,10 );
-		drawCharacter(day[1],9 + increment,2 ,16 + increment,10 );
-		drawCharacter(day[2],18 + increment,2 ,25 + increment,10 );
+		//prints day
+		drawCharacter(day[0],0 + increment,2 ,7 + increment,10,RED);
+		drawCharacter(day[1],9 + increment,2 ,16 + increment,10,RED );
+		drawCharacter(day[2],18 + increment,2 ,25 + increment,10,RED );
+		
+		//prints temp
+		drawCharacter('T',0 + increment,30,6 + increment,34,RED);
+		drawCharacter('E',0 + increment,36,6 + increment,40,RED);
+		drawCharacter('M',0 + increment,42,6 + increment,46,RED);
+		drawCharacter('P',0 + increment,48,6 + increment,52,RED);
+		//drawCharacter(':',0 + increment,54,6 + increment,58,RED);
+		//int temperature = weatherObject[i].temperature;
+		if(-1 < 0)
+		{
+			draw_line(15,31,15,34,CYAN);
+		}
+		drawDigit(1,10 + increment,36,15 + increment,39,CYAN);
+		drawDigit(2,41 + increment,31,15 + increment,44,CYAN);
+		
+		drawCharacter('W',0 + increment,70,6 + increment,74,RED);
+		drawCharacter('I',0 + increment,76,6 + increment,80,RED);
+		drawCharacter('N',0 + increment,82,6 + increment,86,RED);
+		drawCharacter('D',0 + increment,88,6 + increment,92,RED);
 		increment += 36;
 	}
 	
