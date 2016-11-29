@@ -546,7 +546,7 @@ void drawNewsArticle(int newsNo, uint16_t color)
 			sCol = START_COL;
 			verticalOffset += 6;
 		}
-		drawCharacter(newsObject[newsNo], 
+		drawCharacter('a', 
 				sRow + verticalOffset, 
 				sCol + 1 + i*6,
 				sRow + verticalOffset + 5,
@@ -561,7 +561,7 @@ void drawNewsInfo()
 	//	char headline[51]; //source
 	//	int currentIndex;
 	fill_color(WHITE);
-	drawNewsArticle(0, ORANGE);
+	drawNewsArticle(0, RED);
 	drawNewsArticle(1, BLUE);
 	drawNewsArticle(2, GREEN);
 }

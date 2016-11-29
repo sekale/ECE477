@@ -19,6 +19,7 @@ int main (void)
 	initializeOLED();
 	//drawTimeMenu(12,0);
 	fill_color(BLACK);
+	drawNewsInfo();
 	drawWeatherInfo();
 	//read_char();
 	Weather weatherData[3];
