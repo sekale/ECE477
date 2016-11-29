@@ -142,20 +142,20 @@ public class DeviceControlActivity extends Activity {
 
     }
 
-    void sendWeatherandNewsData()
+    void gatherWeatherandNewsData()
     {
         //mBluetoothLeService.writeCustomCharacteristic(65);
         //mBluetoothLeService.writeStringCharacteristic("hello");
         FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
         fetchWeatherTask.passBLEService(mBluetoothLeService);
         fetchWeatherTask.passCacheString(weatherStringCache);
-//        fetchWeatherTask.passMessageQueue(messageQueue);
+        fetchWeatherTask.passMessageQueue(messageQueue);
         fetchWeatherTask.execute("47906");
         //fetchWeatherTask.execute("94043");
 
         FetchNewsTask fetchNewsTask = new FetchNewsTask();
         fetchNewsTask.passBLEService(mBluetoothLeService);
-//        fetchWeatherTask.passMessageQueue(messageQueue);
+        fetchNewsTask.passMessageQueue(messageQueue);
         fetchNewsTask.passCacheString(newsStringCache);
         fetchNewsTask.execute();
     }
@@ -400,9 +400,36 @@ public class DeviceControlActivity extends Activity {
         return intentFilter;
     }
 
+    public void sendQueuedData()
+    {
+        if(mBluetoothLeService == null)
+        {
+            Log.v("SendQueuedData", "BluetoothLeService is NULL");
+            return;
+        }
+        while(messageQueue.size() > 0)
+        {
+            String msg = messageQueue.remove();
+            while(mBluetoothLeService.isWriteOpsLockFree()){}
+            mBluetoothLeService.lockWriteOps();
+            mBluetoothLeService.writeStringCharacteristic(msg);
+            //noinspection StatementWithEmptyBody
+            while(mBluetoothLeService.isWriteOpsLockFree())
+            {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            Log.v("Data sent:", msg);
+        }
+    }
+
     public void refreshData(View view)
     {
-        sendWeatherandNewsData();
+        gatherWeatherandNewsData();
+        sendQueuedData();
     }
 
     public void gestureLeft(View view)
@@ -505,7 +532,8 @@ public class DeviceControlActivity extends Activity {
             if(MinutesPassed == 15)
             {
                 // Update news and weather every 15 minutes
-                DeviceControlActivity.this.sendWeatherandNewsData();
+                DeviceControlActivity.this.gatherWeatherandNewsData();  // TODO
+                DeviceControlActivity.this.sendQueuedData();
                 MinutesPassed = 0;
             }
 

@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.Queue;
 
 /**
  * open sourced from Udacity's Sunshine App implemented by the great github user sekale
@@ -29,6 +30,13 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>
     private BluetoothLeService mBluetoothLeService;
 
     String[] cachedStrs = null;
+    Queue<String> messageQueue;
+
+    void passMessageQueue(Queue<String> msgQ)
+    {
+        messageQueue = msgQ;
+    }
+
     void passCacheString(String[] weatherStringCache)
     {
         Log.v(LOG_TAG, "weatherStringCache: " + weatherStringCache[0] + " | " + weatherStringCache[1] + " | " + weatherStringCache[2]);
@@ -294,8 +302,8 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>
                 cachedStrs[i] = new String(result[i]);
             }
         }
-        Log.v(LOG_TAG, "Cache updated: " + cachedStrs[0] + " | " + cachedStrs[1] + "," + cachedStrs[2]);
-        Log.v(LOG_TAG, "Result compared: " + result[0] + " | " + result[1] + "," + result[2]);
+//        Log.v(LOG_TAG, "Cache updated: " + cachedStrs[0] + " | " + cachedStrs[1] + "," + cachedStrs[2]);
+//        Log.v(LOG_TAG, "Result compared: " + result[0] + " | " + result[1] + "," + result[2]);
 
 
 
@@ -312,22 +320,23 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>
                     break;
                 }
                 //mForecastAdapter.add(dayForecastStr);
-                Log.v(LOG_TAG, dayForecastStr);
+                //Log.v(LOG_TAG, dayForecastStr);
 
                 //noinspection StatementWithEmptyBody
-                while(mBluetoothLeService.isWriteOpsLockFree()){}
-                mBluetoothLeService.lockWriteOps();
-                mBluetoothLeService.writeStringCharacteristic(dayForecastStr);
+//                while(mBluetoothLeService.isWriteOpsLockFree()){}
+//                mBluetoothLeService.lockWriteOps();
+//                mBluetoothLeService.writeStringCharacteristic(dayForecastStr);
+                messageQueue.add(dayForecastStr);
+                Log.v("Weather data -> queue:", dayForecastStr);
                 //noinspection StatementWithEmptyBody
-                while(mBluetoothLeService.isWriteOpsLockFree())
-                {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                Log.v("Weather Sent:", dayForecastStr);
+//                while(mBluetoothLeService.isWriteOpsLockFree())
+//                {
+//                    try {
+//                        Thread.sleep(100);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
             }
         }
         Log.v(LOG_TAG, "Finished Weather execution");

@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Queue;
 
 public class FetchNewsTask extends AsyncTask<Void, Void, String[]>
 {
@@ -34,6 +35,13 @@ public class FetchNewsTask extends AsyncTask<Void, Void, String[]>
     private Pair<String,String> newsList[] = new Pair[3];
 
     String[] cachedStrs = null;
+    Queue<String> messageQueue;
+
+    void passMessageQueue(Queue<String> msgQ)
+    {
+        messageQueue = msgQ;
+    }
+
     void passCacheString(String[] newsStringCache)
     {
         Log.v(LOG_TAG, "newsStringCache: " + newsStringCache[0] + " | " + newsStringCache[1] + " | " + newsStringCache[2]);
@@ -66,20 +74,22 @@ public class FetchNewsTask extends AsyncTask<Void, Void, String[]>
 
     void sendToMicro(String msg)
     {
-        //noinspection StatementWithEmptyBody
-        while(mBluetoothLeService.isWriteOpsLockFree()){}
-        mBluetoothLeService.lockWriteOps();
-        mBluetoothLeService.writeStringCharacteristic(msg);
-        //noinspection StatementWithEmptyBody
-        while(mBluetoothLeService.isWriteOpsLockFree())
-        {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        Log.v(LOG_TAG, "News Sent: " + msg);
+//        //noinspection StatementWithEmptyBody
+//        while(mBluetoothLeService.isWriteOpsLockFree()){}
+//        mBluetoothLeService.lockWriteOps();
+        messageQueue.add(msg);
+        Log.v("News data -> queue: ", msg);
+//        mBluetoothLeService.writeStringCharacteristic(msg);
+//        //noinspection StatementWithEmptyBody
+//        while(mBluetoothLeService.isWriteOpsLockFree())
+//        {
+//            try {
+//                Thread.sleep(100);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        Log.v(LOG_TAG, "News Sent: " + msg);
     }
 
     @Override
