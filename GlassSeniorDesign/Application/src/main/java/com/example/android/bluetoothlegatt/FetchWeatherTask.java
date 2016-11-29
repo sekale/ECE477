@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.format.Time;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,7 +26,6 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>
 {
 
     //public ArrayAdapter<String> mForecastAdapter;
-    private BluetoothLeService mBluetoothLeService;
 
     String[] cachedStrs = null;
     Queue<String> messageQueue;
@@ -42,12 +40,6 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>
         Log.v(LOG_TAG, "weatherStringCache: " + weatherStringCache[0] + " | " + weatherStringCache[1] + " | " + weatherStringCache[2]);
         cachedStrs = weatherStringCache;
         Log.v(LOG_TAG, "cacheStr: " + cachedStrs[0] + " | " + cachedStrs[1] + " | " + cachedStrs[2]);
-    }
-
-
-    void passBLEService(BluetoothLeService mBLEService)
-    {
-        mBluetoothLeService = mBLEService;
     }
 
     private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
@@ -315,28 +307,11 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>
                 {
                     continue;
                 }
-                if(mBluetoothLeService == null)
-                {
-                    break;
-                }
-                //mForecastAdapter.add(dayForecastStr);
                 //Log.v(LOG_TAG, dayForecastStr);
 
                 //noinspection StatementWithEmptyBody
-//                while(mBluetoothLeService.isWriteOpsLockFree()){}
-//                mBluetoothLeService.lockWriteOps();
-//                mBluetoothLeService.writeStringCharacteristic(dayForecastStr);
                 messageQueue.add(dayForecastStr);
                 Log.v("Weather data -> queue:", dayForecastStr);
-                //noinspection StatementWithEmptyBody
-//                while(mBluetoothLeService.isWriteOpsLockFree())
-//                {
-//                    try {
-//                        Thread.sleep(100);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
             }
         }
         Log.v(LOG_TAG, "Finished Weather execution");

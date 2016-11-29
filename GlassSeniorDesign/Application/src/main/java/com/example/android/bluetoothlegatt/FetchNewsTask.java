@@ -1,37 +1,19 @@
 package com.example.android.bluetoothlegatt;
 
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.text.format.Time;
 import android.util.Log;
 import android.util.Pair;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Queue;
 
 public class FetchNewsTask extends AsyncTask<Void, Void, String[]>
 {
 
-    private BluetoothLeService mBluetoothLeService;
     private Pair<String,String> newsList[] = new Pair[3];
 
     String[] cachedStrs = null;
@@ -47,11 +29,6 @@ public class FetchNewsTask extends AsyncTask<Void, Void, String[]>
         Log.v(LOG_TAG, "newsStringCache: " + newsStringCache[0] + " | " + newsStringCache[1] + " | " + newsStringCache[2]);
         cachedStrs = newsStringCache;
         Log.v(LOG_TAG, "cacheStr: " + cachedStrs[0] + " | " + cachedStrs[1] + " | " + cachedStrs[2]);
-    }
-
-    void passBLEService(BluetoothLeService mBLEService)
-    {
-        mBluetoothLeService = mBLEService;
     }
 
     private final String LOG_TAG = com.example.android.bluetoothlegatt.FetchNewsTask.class.getSimpleName();
@@ -74,22 +51,8 @@ public class FetchNewsTask extends AsyncTask<Void, Void, String[]>
 
     void sendToMicro(String msg)
     {
-//        //noinspection StatementWithEmptyBody
-//        while(mBluetoothLeService.isWriteOpsLockFree()){}
-//        mBluetoothLeService.lockWriteOps();
         messageQueue.add(msg);
         Log.v("News data -> queue: ", msg);
-//        mBluetoothLeService.writeStringCharacteristic(msg);
-//        //noinspection StatementWithEmptyBody
-//        while(mBluetoothLeService.isWriteOpsLockFree())
-//        {
-//            try {
-//                Thread.sleep(100);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        Log.v(LOG_TAG, "News Sent: " + msg);
     }
 
     @Override
@@ -162,11 +125,6 @@ public class FetchNewsTask extends AsyncTask<Void, Void, String[]>
 //            {
 //                Log.v(LOG_TAG, "adding news article: " + article);
 //            }
-
-//            mBluetoothLeService.lockWriteOps();
-//            mBluetoothLeService.writeStringCharacteristic(result[0]);
-//            //noinspection StatementWithEmptyBody
-//            while(mBluetoothLeService.isWriteOpsLockFree()){}
         }
     }
 }

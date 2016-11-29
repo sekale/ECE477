@@ -1,23 +1,6 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.example.android.bluetoothlegatt;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.BroadcastReceiver;
@@ -147,14 +130,12 @@ public class DeviceControlActivity extends Activity {
         //mBluetoothLeService.writeCustomCharacteristic(65);
         //mBluetoothLeService.writeStringCharacteristic("hello");
         FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
-        fetchWeatherTask.passBLEService(mBluetoothLeService);
         fetchWeatherTask.passCacheString(weatherStringCache);
         fetchWeatherTask.passMessageQueue(messageQueue);
         fetchWeatherTask.execute("47906");
         //fetchWeatherTask.execute("94043");
 
         FetchNewsTask fetchNewsTask = new FetchNewsTask();
-        fetchNewsTask.passBLEService(mBluetoothLeService);
         fetchNewsTask.passMessageQueue(messageQueue);
         fetchNewsTask.passCacheString(newsStringCache);
         fetchNewsTask.execute();
@@ -270,6 +251,7 @@ public class DeviceControlActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        gatherWeatherandNewsData();
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         if (mBluetoothLeService != null) {
             final boolean result = mBluetoothLeService.connect(mDeviceAddress);
@@ -343,9 +325,8 @@ public class DeviceControlActivity extends Activity {
         String unknownServiceString = getResources().getString(R.string.unknown_service);
         String unknownCharaString = getResources().getString(R.string.unknown_characteristic);
         ArrayList<HashMap<String, String>> gattServiceData = new ArrayList<HashMap<String, String>>();
-        ArrayList<ArrayList<HashMap<String, String>>> gattCharacteristicData
-                = new ArrayList<ArrayList<HashMap<String, String>>>();
-        mGattCharacteristics = new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
+        ArrayList<ArrayList<HashMap<String, String>>> gattCharacteristicData = new ArrayList<>();
+        mGattCharacteristics = new ArrayList<>();
 
         // Loops through available GATT Services.
         for (BluetoothGattService gattService : gattServices) {
@@ -357,11 +338,10 @@ public class DeviceControlActivity extends Activity {
             gattServiceData.add(currentServiceData);
 
             ArrayList<HashMap<String, String>> gattCharacteristicGroupData =
-                    new ArrayList<HashMap<String, String>>();
+                    new ArrayList<>();
             List<BluetoothGattCharacteristic> gattCharacteristics =
                     gattService.getCharacteristics();
-            ArrayList<BluetoothGattCharacteristic> charas =
-                    new ArrayList<BluetoothGattCharacteristic>();
+            ArrayList<BluetoothGattCharacteristic> charas = new ArrayList<>();
 
             // Loops through available Characteristics.
             for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
@@ -422,7 +402,7 @@ public class DeviceControlActivity extends Activity {
                     e.printStackTrace();
                 }
             }
-            Log.v("Data sent:", msg);
+            Log.v("Sent:", msg);
         }
     }
 
@@ -513,31 +493,21 @@ public class DeviceControlActivity extends Activity {
     class OneMinuteCountDownTimer extends CountDownTimer
     {
 
-        public int MinutesPassed;
-
         public OneMinuteCountDownTimer (long startTime, long interval)
         {
             super(startTime, interval);
             DeviceControlActivity.this.sendTimeData();
-            MinutesPassed = 14; // new data will be sent in 1 minute
         }
 
         @Override
         public void onFinish()
         {
-
-            //Log.v("TimerFinished: ", "timer="+Time+" time finished");
-            MinutesPassed+=1;
             DeviceControlActivity.this.sendTimeData();
-            if(MinutesPassed == 15)
-            {
-                // Update news and weather every 15 minutes
-                DeviceControlActivity.this.gatherWeatherandNewsData();  // TODO
-                DeviceControlActivity.this.sendQueuedData();
-                MinutesPassed = 0;
-            }
+            DeviceControlActivity.this.sendQueuedData();
+            // gather new data to send for next time slot
+            DeviceControlActivity.this.gatherWeatherandNewsData();
 
-            this.start();
+            this.start();   // restart countDownTimer for next minute
         }
 
         @Override
