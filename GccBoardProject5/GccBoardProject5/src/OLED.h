@@ -437,6 +437,82 @@ void drawTimeMenu(int hour, int mins)
 	drawDigit(mins%10, 5, 71, 59, 90);
 }
 
+void getDay(char *day , int dayNum)
+{
+		
+	if(dayNum == 1)
+	{
+		day[0] = 'M';
+		day[1] = 'O';
+		day[2] = 'N';
+		day[3] = '\0';
+	}
+	else if(dayNum == 2)
+	{
+		day[0] = 'T';
+		day[1] = 'U';
+		day[2] = 'E';
+		day[3] = '\0';
+	}
+	else if(dayNum == 3)
+	{
+		day[0] = 'W';
+		day[1] = 'E';
+		day[2] = 'D';
+		day[3] = '\0';
+	}
+	else if(dayNum == 4)
+	{
+		day[0] = 'T';
+		day[1] = 'H';
+		day[2] = 'U';
+		day[3] = '\0';
+	}
+	else if(dayNum == 5)
+	{
+		day[0] = 'F';
+		day[1] = 'R';
+		day[2] = 'I';
+		day[3] = '\0';
+	}
+	else if(dayNum == 6)
+	{
+		day[0] = 'S';
+		day[1] = 'A';
+		day[2] = 'T';
+		day[3] = '\0';
+	}
+	else if(dayNum == 7)
+	{
+		day[0] = 'S';
+		day[1] = 'U';
+		day[2] = 'N';
+		day[3] = '\0';
+	}
+	
+}
+
+void drawWeatherInfo()
+{
+	int i = 0;
+	char day[4];
+	day[0] = 'W';
+	day[1] = 'E';
+	day[2] = 'D';
+	day[3] = '\0';
+	int increment = 0;
+	for(i = 0; i < 2 ; i++)
+	{
+		//getDay(day,weatherObject[i].typeDay);
+		drawCharacter(day[0],0 + increment,2 ,7 + increment,10 );
+		drawCharacter(day[1],9 + increment,2 ,16 + increment,10 );
+		drawCharacter(day[2],18 + increment,2 ,25 + increment,10 );
+		increment += 36;
+	}
+	
+	
+}
+
 void initializeOLED()
 {
 	//reset

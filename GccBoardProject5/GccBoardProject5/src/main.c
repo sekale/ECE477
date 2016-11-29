@@ -17,7 +17,9 @@ int main (void)
 	spi_init();
 	/* Insert application code here, after the board has been initialized. */	
 	initializeOLED();
-	drawTimeMenu(12,0);
+	//drawTimeMenu(12,0);
+	fill_color(BLACK);
+	drawWeatherInfo();
 	//read_char();
 	Weather weatherData[3];
 	initializeUSART();
@@ -44,7 +46,7 @@ int main (void)
 		//start an async read of data
 		//Check if device is bound SUW will return an ERR\r\n if device is unbound
 		read_char(); //read whatever's coming in through the RN4020 BLE
-		if(timeChangeFlag)
+		if(timeChangeFlag && screenTrackCounter == 0 && isScreenOn)
 		{
 			//Call display function for time
 			fill_color(BLACK);
@@ -52,15 +54,18 @@ int main (void)
 			timeChangeFlag = false;
 		}
 		
-		if(weatherChangeFlag)
+		if(weatherChangeFlag && screenTrackCounter == 1 && isScreenOn)
 		{
 			//call display for weather
+			fill_color(YELLOW);
+			drawWeatherInfo();
 			weatherChangeFlag = false;
 		}
 		
-		if(newsChangeFlag)
+		if(newsChangeFlag && screenTrackCounter == 2 && isScreenOn)
 		{
 			//call display for news
+			fill_color(GREEN);
 			newsChangeFlag = false;
 		}
 				

@@ -30,7 +30,8 @@ TimeNow     timeObject;
 bool		timeChangeFlag = false;
 bool		weatherChangeFlag = false;
 bool		newsChangeFlag = false;
-
+int			screenTrackCounter = 0;
+bool		isScreenOn = false;
 //string send and responses//
 	uint8_t string_Plus[] = "+\r\n";
 	uint8_t string_Reboot[] = "R,1\r\n";
@@ -145,7 +146,7 @@ void parseNews()
 	if(actualResponseValue[8] == 'N')
 	{
 		newsObject[newsObjIndex].currentIndex	= 0;
-		newsObject[newsObjIndex].headline[0]	= '\0';
+		//newsObject[newsObjIndex].headline[0]	= '\0';
 	}
 	while(actualResponseValue[i] != '!')
 	{	
@@ -201,6 +202,75 @@ void unHex(uint8_t *buf)
 	}while(buf[i++] != '!');
 }
 
+void parseGesture()
+{
+	
+	if(actualResponseValue[10] == 'L')
+	{
+		if(screenTrackCounter != 0)
+		{
+			screenTrackCounter--;
+			if(screenTrackCounter == 0)
+			{
+				timeChangeFlag = true;
+			}
+			else if(screenTrackCounter == 1)
+			{
+				weatherChangeFlag = true;
+			}
+			else if(screenTrackCounter == 2)
+			{
+				newsChangeFlag = true;
+			}
+		}
+	}
+	else if(actualResponseValue[10] == 'R')
+	{
+		if(screenTrackCounter != 2)
+		{
+			screenTrackCounter++;
+			if(screenTrackCounter == 0)
+			{
+				timeChangeFlag = true;
+			}
+			else if(screenTrackCounter == 1)
+			{
+				weatherChangeFlag = true;
+			}
+			else if(screenTrackCounter == 2)
+			{
+				newsChangeFlag = true;
+			}			
+		}
+		
+	}
+	else if(actualResponseValue[10] == 'T')
+	{
+		isScreenOn = !isScreenOn;
+		if(!isScreenOn)
+		{
+			fill_color(BLACK);
+		}
+		else
+		{
+			if(screenTrackCounter == 0)
+			{
+				timeChangeFlag = true;
+			}
+			else if(screenTrackCounter == 1)
+			{
+				weatherChangeFlag = true;
+			}
+			else if(screenTrackCounter == 2)
+			{
+				newsChangeFlag = true;
+			}			
+			
+		}
+		
+	}
+}
+
 void parseResponse()
 {	
 	unHex(actualResponseValue);
@@ -220,6 +290,10 @@ void parseResponse()
 	{
 		parseTime();
 		timeChangeFlag = true;
+	}
+	else if(actualResponseValue[8] == 'G')
+	{
+		parseGesture();
 	}	
 }
 
@@ -401,5 +475,7 @@ void initializeUSART()
 	delay_ms(1000);
 	read_char();
 	//usart_write_buffer_wait(&usart_instance, stringLs, sizeof(stringLs));	
+	screenTrackCounter = 0;
+	isScreenOn = true;
 }
 #endif /* USART_H_ */

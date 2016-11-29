@@ -3,34 +3,24 @@
 
 typedef struct weather
 {
-	int numDay; // 1 - Today 2 - Tomorrow 3 - Day After
-	char *typeDay;
-	char *temperature;
-	char *windSpeed;
-};
+	uint8_t typeDay;
+	int temperature;
+	int windSpeed;
+	char typeWeather[12];	// for ex. - Rainy, Cloudy etc.
+}Weather;
 
 typedef struct news
 {
-	char *postedBy; //source
-	char *headline; //source
-};
+	char headline[51]; //source
+	int currentIndex;
+}News;
 
 typedef struct time_now
 {
 	//Minute Hand <x,y> coordinates
-	char *x_min;
-	char *y_min;
+	int min;
 	
 	//Hour Hand <x,y> coordinates
-	char *x_hr;
-	char *y_hr;
-};
-
-
-
-
-
-
-
-
+	int hour;
+}TimeNow;
 #endif /* INCFILE1_H_ */
