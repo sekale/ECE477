@@ -111,7 +111,7 @@ uint8_t SPI_transfer_byte(uint8_t byte_out)
 	uint8_t byte_in = 0;
 	uint8_t bit;
 	port_pin_set_output_level(EXT1_PIN_17, true);
-	delay_ms(500);
+	delay_ms(10);
 	port_pin_set_output_level(EXT1_PIN_17, false); //cs low
 	for (bit = 0x80; bit; bit >>= 1)
 	{
@@ -435,136 +435,6 @@ void drawTimeMenu(int hour, int mins)
 	drawDigit(hour%10, 5, 27, 59, 46, RED);
 	drawDigit(mins/10, 5, 49, 59, 68, RED);
 	drawDigit(mins%10, 5, 71, 59, 90, RED);
-}
-
-void getDay(char *day , int dayNum)
-{
-		
-	if(dayNum == 1)
-	{
-		day[0] = 'M';
-		day[1] = 'O';
-		day[2] = 'N';
-		day[3] = '\0';
-	}
-	else if(dayNum == 2)
-	{
-		day[0] = 'T';
-		day[1] = 'U';
-		day[2] = 'E';
-		day[3] = '\0';
-	}
-	else if(dayNum == 3)
-	{
-		day[0] = 'W';
-		day[1] = 'E';
-		day[2] = 'D';
-		day[3] = '\0';
-	}
-	else if(dayNum == 4)
-	{
-		day[0] = 'T';
-		day[1] = 'H';
-		day[2] = 'U';
-		day[3] = '\0';
-	}
-	else if(dayNum == 5)
-	{
-		day[0] = 'F';
-		day[1] = 'R';
-		day[2] = 'I';
-		day[3] = '\0';
-	}
-	else if(dayNum == 6)
-	{
-		day[0] = 'S';
-		day[1] = 'A';
-		day[2] = 'T';
-		day[3] = '\0';
-	}
-	else if(dayNum == 7)
-	{
-		day[0] = 'S';
-		day[1] = 'U';
-		day[2] = 'N';
-		day[3] = '\0';
-	}
-	
-}
-
-void drawWeatherInfo()
-{
-	int i = 0;
-	char day[4];
-	day[0] = 'W';
-	day[1] = 'E';
-	day[2] = 'D';
-	day[3] = '\0';
-	int increment = 0;
-	for(i = 0; i < 2 ; i++)
-	{
-		//getDay(day,weatherObject[i].typeDay);
-		//prints day
-		drawCharacter(day[0],0 + increment,2 ,7 + increment,10,RED);
-		drawCharacter(day[1],9 + increment,2 ,16 + increment,10,RED );
-		drawCharacter(day[2],18 + increment,2 ,25 + increment,10,RED );
-		
-		//prints temp
-		drawCharacter('T',0 + increment,30,6 + increment,34,RED);
-		drawCharacter('E',0 + increment,36,6 + increment,40,RED);
-		drawCharacter('M',0 + increment,42,6 + increment,46,RED);
-		drawCharacter('P',0 + increment,48,6 + increment,52,RED);
-		
-		//int temperature = weatherObject[i].temperature;
-		//draw_line(0,0,63,95,GREEN);	// The perfect diagonal
-		if(-1 < 0)
-		{
-			draw_line(15 + increment,31,15 + increment,34,CYAN);
-		}
-		drawDigit(1,10 + increment,36,15 + increment,39,CYAN);
-		drawDigit(2,10 + increment,41,15 + increment,44,CYAN);
-		
-		drawCharacter('W',0 + increment,70,6 + increment,74,RED);
-		drawCharacter('I',0 + increment,76,6 + increment,80,RED);
-		drawCharacter('N',0 + increment,82,6 + increment,86,RED);
-		drawCharacter('D',0 + increment,88,6 + increment,92,RED);
-		increment += 36;
-	}
-	
-	
-}
-
-void drawNewsArticle(int newsNo, uint16_t color)
-{
-	int sRow = newsNo*20;
-	int START_COL = 0;
-	int sCol = START_COL;
-	int verticalOffset = 0;
-	for(int i = 0; i < 48; ++i)
-	{
-		if(i % 16 == 0)
-		{
-			sCol = START_COL;
-			verticalOffset += 6;
-		}
-		drawCharacter('a', 
-				sRow + verticalOffset + 1, 
-				sCol + 1 + (i%16)*6,
-				sRow + verticalOffset + 1 + 5,
-				sCol + 1 + 5 + (i%16)*6,
-				color);
-	}
-}
-
-void drawNewsInfo()
-{
-	// newsObject[3] struct defined
-	//	char headline[51]; //source
-	//	int currentIndex;
-	fill_color(WHITE);
-	drawNewsArticle(0, RED);
-	drawNewsArticle(1, BLUE);
-	drawNewsArticle(2, GREEN);
 }
 
 void initializeOLED()

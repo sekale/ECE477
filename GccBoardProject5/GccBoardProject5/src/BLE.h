@@ -32,6 +32,7 @@ bool		weatherChangeFlag = false;
 bool		newsChangeFlag = false;
 int			screenTrackCounter = 0;
 bool		isScreenOn = false;
+bool		doneFlag = true;
 //string send and responses//
 	uint8_t string_Plus[] = "+\r\n";
 	uint8_t string_Reboot[] = "R,1\r\n";
@@ -71,6 +72,7 @@ void clearBuffer()
 void read_char()
 {
 	current_Rx_buffer_position = 0;
+	doneFlag = false;
 	int READ_CHAR_TIMEOUT = 100000;
 	//clearBuffer();
 	int read_char_timeout = 0;
@@ -294,7 +296,24 @@ void parseResponse()
 	else if(actualResponseValue[8] == 'G')
 	{
 		parseGesture();
-	}	
+	}
+	else if(actualResponseValue[8] == 'D')
+	{
+		doneFlag = true;
+		if(screenTrackCounter == 0)
+		{
+			timeChangeFlag = true;
+		}
+		else if(screenTrackCounter == 1)
+		{
+			weatherChangeFlag = true;
+		}
+		else if(screenTrackCounter == 2)
+		{
+			newsChangeFlag = true;
+		}		
+	}
+		
 }
 
 
