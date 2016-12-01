@@ -1,5 +1,7 @@
 GccBoardProject5/GccBoardProject5/Debug/*
 *.atsuo
+*/Debug/*
+*/.vs/*
 
 # Built application files
 *.apk
